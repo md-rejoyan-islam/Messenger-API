@@ -1,10 +1,15 @@
 import { Response } from "express";
 
+import { ObjectId } from "mongoose";
 import {
   acceptFriendRequest,
   blockUser,
   cancelFriendRequest,
   changePassword,
+  findFriends,
+  getAllFriends,
+  getAllSentRequests,
+  getFriendRequests,
   rejectFriendRequest,
   sendFriendRequest,
   unblockUser,
@@ -33,6 +38,64 @@ const changePasswordController = catchAsync(
 
     await changePassword(_id, oldPassword, newPassword);
     successResponse(res, "Password changed successfully");
+  }
+);
+
+// get friend requests
+/**
+ * @description Get friend requests for the authenticated user
+ * @method GET
+ * @route /api/users/friend-requests
+ * @success-response 200 {object[]} requests - List of friend requests
+ * @error-response 401 {string} message - Not authorized, token failed
+ * * @error-response 500 {string} message - Server error
+ * @protected Yes
+ */
+const getFriendRequestController = catchAsync(
+  async (req: IUserRequest, res: Response): Promise<void> => {
+    const { _id } = req.user!;
+    const requests = await getFriendRequests(_id);
+    successResponse(res, "Friend requests retrieved successfully", requests);
+  }
+);
+
+// get all friends
+/**
+ * @description Get all friends of the authenticated user
+ * @method GET
+ * @route /api/users/friends
+ * @success-response 200 {object[]} friends - List of friends
+ * @error-response 401 {string} message - Not authorized, token failed
+ * @error-response 500 {string} message - Server error
+ * @protected Yes
+ */
+const getAllFriendsController = catchAsync(
+  async (req: IUserRequest, res: Response): Promise<void> => {
+    const { _id } = req.user!;
+    const friends = await getAllFriends(_id);
+    successResponse(res, "Friends retrieved successfully", friends);
+  }
+);
+
+// get all sending friend requests
+/**
+ * @description Get all sent friend requests by the authenticated user
+ * @method GET
+ * @route /api/users/sent-requests
+ * @success-response 200 {object[]} requests - List of sent friend requests
+ * @error-response 401 {string} message - Not authorized, token failed
+ * @error-response 500 {string} message - Server error
+ * @protected Yes
+ */
+const getAllSentRequestsController = catchAsync(
+  async (req: IUserRequest, res: Response): Promise<void> => {
+    const { _id } = req.user!;
+    const requests = await getAllSentRequests(_id);
+    successResponse(
+      res,
+      "Sent friend requests retrieved successfully",
+      requests
+    );
   }
 );
 
@@ -179,11 +242,37 @@ const updateUserProfileController = catchAsync(
   }
 );
 
+/**
+ * @description Find friends by name or email
+ * @method GET
+ * @route /api/users/find-friends
+ * @query {string} q - Search query (name or email)
+ * @success-response 200 {object[]} users - List of users matching the search query
+ * @error-response 401 {string} message - Not authorized, token failed
+ * @protected Yes
+ */
+const findFriendsController = catchAsync(
+  async (req: IUserRequest, res: Response): Promise<void> => {
+    const { search = "" } = req.query;
+    const { _id } = req.user!;
+
+    const users = await findFriends(
+      _id as unknown as ObjectId,
+      search as string
+    );
+    successResponse(res, "Users found", users);
+  }
+);
+
 export {
   acceptFriendRequestController,
   blockUserController,
   cancelFriendRequestController,
   changePasswordController,
+  findFriendsController,
+  getAllFriendsController,
+  getAllSentRequestsController,
+  getFriendRequestController,
   rejectFriendRequestController,
   sendFriendRequestController,
   unblockUserController,

@@ -13,7 +13,7 @@ describe('User API', () => {
 
     // Register a test user
     const registerRes = await request(app)
-      .post('/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'Test User',
         email: `test_user_${Date.now()}@example.com`,
@@ -26,7 +26,7 @@ describe('User API', () => {
 
     // Register another user
     const otherUserRes = await request(app)
-      .post('/api/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'Other User',
         email: `other_user_${Date.now()}@example.com`,
@@ -39,7 +39,7 @@ describe('User API', () => {
 
   it('should register a new user', async () => {
     const res = await request(app)
-      .post('/api/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'New User',
         email: 'new@example.com',
@@ -53,7 +53,7 @@ describe('User API', () => {
   it('should not register a user with existing email', async () => {
     // Register a user first
     await request(app)
-      .post('/api/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'Existing User',
         email: 'existing@example.com',
@@ -61,7 +61,7 @@ describe('User API', () => {
       });
 
     const res = await request(app)
-      .post('/api/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'Another User',
         email: 'existing@example.com',
@@ -74,7 +74,7 @@ describe('User API', () => {
 
   it('should login an existing user', async () => {
     const res = await request(app)
-      .post('/users/login')
+      .post('/api/v1/auth/login')
       .send({
         email: testUser.email,
         password: 'password123',
@@ -86,7 +86,7 @@ describe('User API', () => {
 
   it('should not login with invalid credentials', async () => {
     const res = await request(app)
-      .post('/users/login')
+      .post('/api/v1/auth/login')
       .send({
         email: 'test@example.com',
         password: 'wrongpassword',
@@ -98,7 +98,7 @@ describe('User API', () => {
 
   it('should send a friend request', async () => {
     const res = await request(app)
-      .post('/users/friend-request')
+      .post('/api/v1/users/friend-request')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -114,7 +114,7 @@ describe('User API', () => {
   it('should accept a friend request', async () => {
     // Send request first
     await request(app)
-      .post('/api/users/friend-request')
+      .post('/api/v1/users/friend-request')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -122,7 +122,7 @@ describe('User API', () => {
 
     // Accept request from other user's perspective
     const otherUserLoginRes = await request(app)
-      .post('/api/users/login')
+      .post('/api/v1/auth/login')
       .send({
         email: otherUser.email,
         password: 'password123',
@@ -130,7 +130,7 @@ describe('User API', () => {
     const otherUserAuthToken = otherUserLoginRes.body.data.token;
 
     const res = await request(app)
-      .post('/api/users/friend-request/accept')
+      .post('/api/v1/users/friend-request/accept')
       .set('Authorization', `Bearer ${otherUserAuthToken}`)
       .send({
         userId: testUser._id,
@@ -151,7 +151,7 @@ describe('User API', () => {
   it('should reject a friend request', async () => {
     // Send request first
     await request(app)
-      .post('/api/users/friend-request')
+      .post('/api/v1/users/friend-request')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -159,7 +159,7 @@ describe('User API', () => {
 
     // Reject request from other user's perspective
     const otherUserLoginRes = await request(app)
-      .post('/api/users/login')
+      .post('/api/v1/auth/login')
       .send({
         email: otherUser.email,
         password: 'password123',
@@ -167,7 +167,7 @@ describe('User API', () => {
     const otherUserAuthToken = otherUserLoginRes.body.data.token;
 
     const res = await request(app)
-      .post('/api/users/friend-request/reject')
+      .post('/api/v1/users/friend-request/reject')
       .set('Authorization', `Bearer ${otherUserAuthToken}`)
       .send({
         userId: testUser._id,
@@ -186,7 +186,7 @@ describe('User API', () => {
   it('should cancel a sent friend request', async () => {
     // Send request first
     await request(app)
-      .post('/api/users/friend-request')
+      .post('/api/v1/users/friend-request')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -194,7 +194,7 @@ describe('User API', () => {
 
     // Cancel request
     const res = await request(app)
-      .post('/api/users/friend-request/cancel')
+      .post('/api/v1/users/friend-request/cancel')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -213,20 +213,20 @@ describe('User API', () => {
   it('should unfriend a user', async () => {
     // Make them friends first
     await request(app)
-      .post('/api/users/friend-request')
+      .post('/api/v1/users/friend-request')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
       });
     const otherUserLoginRes = await request(app)
-      .post('/api/users/login')
+      .post('/api/v1/auth/login')
       .send({
         email: otherUser.email,
         password: 'password123',
       });
     const otherUserAuthToken = otherUserLoginRes.body.data.token;
     await request(app)
-      .post('/api/users/friend-request/accept')
+      .post('/api/v1/users/friend-request/accept')
       .set('Authorization', `Bearer ${otherUserAuthToken}`)
       .send({
         userId: testUser._id,
@@ -234,7 +234,7 @@ describe('User API', () => {
 
     // Unfriend
     const res = await request(app)
-      .post('/api/users/unfriend')
+      .post('/api/v1/users/unfriend')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -252,13 +252,13 @@ describe('User API', () => {
 
   it('should block a user', async () => {
     const res = await request(app)
-      .post('/api/users/block')
+      .post('/api/v1/users/block')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
       });
     expect(res.statusCode).toEqual(200);
-    expect(res.body.success).toBe(true);
+    expect(res.body.success).toBe.true;
     expect(res.body.message).toEqual('User blocked');
 
     const updatedTestUser = await User.findById(testUser._id);
@@ -268,7 +268,7 @@ describe('User API', () => {
   it('should unblock a user', async () => {
     // Block first
     await request(app)
-      .post('/api/users/block')
+      .post('/api/v1/users/block')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -276,7 +276,7 @@ describe('User API', () => {
 
     // Unblock
     const res = await request(app)
-      .post('/api/users/unblock')
+      .post('/api/v1/users/unblock')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         userId: otherUser._id,
@@ -291,7 +291,7 @@ describe('User API', () => {
 
   it('should update user profile', async () => {
     const res = await request(app)
-      .put('/api/users/profile')
+      .put('/api/v1/users/profile')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         name: 'Updated Name',
@@ -310,7 +310,7 @@ describe('User API', () => {
 
   it('should change user password', async () => {
     const res = await request(app)
-      .put('/api/users/change-password')
+      .put('/api/v1/users/change-password')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         oldPassword: 'password123',
@@ -322,7 +322,7 @@ describe('User API', () => {
 
     // Try logging in with new password
     const loginRes = await request(app)
-      .post('/api/users/login')
+      .post('/api/v1/auth/login')
       .send({
         email: testUser.email,
         password: 'newsecurepassword',
@@ -333,7 +333,7 @@ describe('User API', () => {
 
   it('should not change password with incorrect old password', async () => {
     const res = await request(app)
-      .put('/api/users/change-password')
+      .put('/api/v1/users/change-password')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         oldPassword: 'wrongpassword',

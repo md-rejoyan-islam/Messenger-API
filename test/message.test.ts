@@ -13,7 +13,7 @@ describe("Message API", () => {
     await Message.deleteMany({});
 
     const registerRes = await request(app)
-      .post("/api/users/register")
+      .post("/api/v1/auth/register")
       .send({
         name: "Test User",
         email: `test_user_${Date.now()}@example.com`,
@@ -25,7 +25,7 @@ describe("Message API", () => {
     testUser = registerRes.body.data;
 
     const otherUserRes = await request(app)
-      .post("/api/users/register")
+      .post("/api/v1/auth/register")
       .send({
         name: "Other User",
         email: `other_user_${Date.now()}@example.com`,
@@ -38,7 +38,7 @@ describe("Message API", () => {
 
   it("should send a message to a recipient", async () => {
     const res = await request(app)
-      .post("/api/messages")
+      .post("/api/v1/messages")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
         recipient: otherUser._id,
@@ -54,7 +54,7 @@ describe("Message API", () => {
 
   it("should edit a message", async () => {
     const sendRes = await request(app)
-      .post("/api/messages")
+      .post("/api/v1/messages")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
         recipient: otherUser._id,
@@ -63,7 +63,7 @@ describe("Message API", () => {
     const messageId = sendRes.body.data._id;
 
     const res = await request(app)
-      .put("/api/messages")
+      .put("/api/v1/messages")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
         messageId,
@@ -79,7 +79,7 @@ describe("Message API", () => {
 
   it("should delete a message", async () => {
     const sendRes = await request(app)
-      .post("/api/messages")
+      .post("/api/v1/messages")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
         recipient: otherUser._id,
@@ -88,7 +88,7 @@ describe("Message API", () => {
     const messageId = sendRes.body.data._id;
 
     const res = await request(app)
-      .delete("/api/messages")
+      .delete("/api/v1/messages")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
         messageId,

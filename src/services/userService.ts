@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import { Types } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import User from "../models/userModel";
 
 const changePassword = async (
@@ -26,6 +26,36 @@ const changePassword = async (
 
   user.password = newPassword;
   await user.save();
+};
+
+// get all friends
+const getAllFriends = async (userId: Types.ObjectId) => {
+  const user = await User.findById(userId)
+    .populate("friends", "name profilePhoto")
+    .select("friends");
+  if (!user) {
+    throw createError(404, "User not found");
+  }
+  return (user.friends as any[]).map((friend) => ({
+    _id: friend._id,
+    name: friend.name,
+    profilePhoto: friend.profilePhoto,
+  }));
+};
+
+// get all sent friend requests
+const getAllSentRequests = async (userId: Types.ObjectId) => {
+  const user = await User.findById(userId)
+    .populate("sentFriendRequests", "name profilePhoto")
+    .select("sentFriendRequests");
+  if (!user) {
+    throw createError(404, "User not found");
+  }
+  return (user.sentFriendRequests as any[]).map((request) => ({
+    _id: request._id,
+    name: request.name,
+    profilePhoto: request.profilePhoto,
+  }));
 };
 
 const sendFriendRequest = async (
@@ -159,11 +189,54 @@ const updateUserProfile = async (
   };
 };
 
+const findFriends = async (userId: ObjectId, query?: string) => {
+  const filterOptions: any = {
+    _id: { $ne: userId },
+  };
+  if (query) {
+    const regex = new RegExp(query, "i");
+    filterOptions.$or = [
+      { name: { $regex: regex } },
+      // { email: { $regex: regex } }, // Uncomment if you want to search by email
+    ];
+  }
+
+  const users = await User.find(filterOptions).select(
+    "-password -friendRequests -blockedUsers"
+  );
+
+  return users.map((user) => ({
+    _id: user._id,
+    name: user.name,
+    profilePhoto: user.profilePhoto,
+    isFriend: user.friends.includes(userId),
+    hasSentRequest: user.sentFriendRequests.includes(userId),
+  }));
+};
+
+const getFriendRequests = async (userId: Types.ObjectId) => {
+  const user = await User.findById(userId)
+    .populate("friendRequests", "name profilePhoto")
+    .select("friendRequests");
+  if (!user) {
+    throw createError(404, "User not found");
+  }
+  return (user.friendRequests as any[]).map((request) => ({
+    _id: request._id,
+    name: request.name,
+    profilePhoto: request.profilePhoto,
+  }));
+};
+
 export {
   acceptFriendRequest,
   blockUser,
   cancelFriendRequest,
   changePassword,
+  findFriends,
+  getAllFriends,
+  getAllSentRequests,
+  getFriendRequests,
   rejectFriendRequest,
   sendFriendRequest,
   unblockUser,

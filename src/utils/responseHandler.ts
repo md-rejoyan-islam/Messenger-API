@@ -35,6 +35,7 @@ const errorResponse = (
     message,
     error,
   };
+
   return res.status(statusCode).json(response);
 };
 

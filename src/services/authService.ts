@@ -1,14 +1,16 @@
-import crypto from "crypto";
+import * as crypto from "crypto";
 import createError from "http-errors";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import secret from "../app/secret";
-import { resetPasswordMail } from "../mails/resetPasswordMail";
+import { sendPasswordResetMail } from "../mails/passwordResetMail";
 import User from "../models/userModel";
+import { generateTokens } from "../utils/jwt";
 
 const registerUser = async (name: string, email: string, password: string) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    throw createError(11000, "User already exists");
+    throw createError(409, "User already exists");
   }
 
   const user = await User.create({
@@ -17,7 +19,9 @@ const registerUser = async (name: string, email: string, password: string) => {
     password,
   });
 
-  const { password: _, ...withoutPasword } = user;
+  // send welcome email
+
+  const { password: _, ...withoutPasword } = user.toObject();
   return withoutPasword;
 };
 
@@ -25,10 +29,21 @@ const loginUser = async (email: string, password: string) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    return {
-      _id: user._id,
-      name: user.name,
+    const { accessToken, refreshToken } = generateTokens({
+      id: user._id.toString(),
       email: user.email,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePhoto: user.profilePhoto,
+        bio: user.bio,
+      },
     };
   } else {
     throw createError.Unauthorized("Invalid email or password");
@@ -50,15 +65,18 @@ const forgotPassword = async (email: string) => {
     .digest("hex");
 
   user.resetPasswordToken = hashToken;
-  user.resetPasswordExpires = new Date(Date.now() + 600); // 1000; // 10 minutes
+
+  user.resetPasswordExpires = new Date(
+    Date.now() + secret.passwordResetTokenExpiration * 1000
+  );
 
   const resetUrl = `${secret.clientUrl}/reset-password/${resetToken}`;
 
   try {
-    await resetPasswordMail({
+    await sendPasswordResetMail({
       to: user.email,
       name: user.name,
-      link: resetUrl,
+      resetLink: resetUrl,
     });
     await user.save();
   } catch (error) {
@@ -71,7 +89,7 @@ const resetPassword = async (token: string, password: string) => {
 
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
-    resetPasswordExpires: { $gt: Date.now() },
+    resetPasswordExpires: { $gt: new Date(Date.now()) },
   });
 
   if (!user) {
@@ -85,4 +103,35 @@ const resetPassword = async (token: string, password: string) => {
   await user.save();
 };
 
-export { forgotPassword, loginUser, registerUser, resetPassword };
+//  refreshToken
+const refreshToken = async (token: string) => {
+  try {
+    const decoded = jwt.verify(
+      token,
+      secret.jwt.refreshTokenSecret as string
+    ) as JwtPayload as { id: string; email: string };
+
+    if (!decoded) {
+      throw createError.Unauthorized("Invalid refresh token");
+    }
+
+    const { id, email } = decoded;
+
+    const user = await User.findOne({ _id: id, email });
+    if (!user) {
+      throw createError.Unauthorized("User not found");
+    }
+    const { accessToken } = generateTokens({
+      id: user._id.toString(),
+      email: user.email,
+    });
+
+    return {
+      accessToken,
+    };
+  } catch (error) {
+    throw createError.Unauthorized("Invalid refresh token");
+  }
+};
+
+export { forgotPassword, loginUser, refreshToken, registerUser, resetPassword };

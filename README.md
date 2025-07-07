@@ -9,6 +9,7 @@ This is the backend server for a real-time chat application, built with Node.js,
 - Friend Management (Send, Accept, Reject, Cancel Friend Requests, Unfriend, Block, Unblock Users)
 - Group Chat Management (Create, Add/Remove Members)
 - Real-time Messaging (Send, Edit, Delete Messages)
+- Real-time Notifications (Typing indicators, friend requests, profile changes, etc.)
 
 ## Installation
 
@@ -48,11 +49,25 @@ The API endpoints are documented using OpenAPI (Swagger). You can find the full 
 
 Key endpoint categories include:
 
--   `/api/users`: User registration, login, profile management, and friend requests.
+-   `/api/auth`: User registration, login, and password management.
+-   `/api/users`: User profile management, and friend requests.
 -   `/api/groups`: Group creation and member management.
 -   `/api/messages`: Sending, editing, and deleting messages.
 
 For detailed request/response schemas and authentication requirements, refer to the `openapi.yaml` file.
+
+## Real-time Functionality
+
+This application uses Socket.io for real-time communication. The following events are supported:
+
+*   **connection**: Authorizes and connects a user to the socket server.
+*   **join**: Joins a user to a room with their user ID.
+*   **sendMessage**: Sends a message to a recipient or a group.
+*   **typing**: Indicates that a user is typing.
+*   **notification**: Sends a notification to a user for events like friend requests, profile changes, etc.
+*   **disconnect**: Disconnects a user from the socket server.
+
+For more details on the socket events and their payloads, please refer to the `openapi.yaml` file.
 
 ## Running Tests
 

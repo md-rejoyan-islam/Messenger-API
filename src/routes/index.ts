@@ -1,7 +1,8 @@
-import express, { Request, Response } from "express";
-import path from "path";
-import swaggerUi from "swagger-ui-express";
-import YAML from "yamljs";
+import * as express from "express";
+import { Request, Response } from "express";
+import * as path from "path";
+import * as swaggerUi from "swagger-ui-express";
+import * as YAML from "yamljs";
 import { errorHandler } from "../middleware/errorHandler";
 import { errorResponse, successResponse } from "../utils/responseHandler";
 
@@ -37,7 +38,7 @@ router.get("/health", (_req: Request, res: Response) => {
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 router.use("/api/v1/auth", authRoutes);
-router.use("/api/v1/users", userRoutes);
+router.use("/api/v1/user", userRoutes);
 router.use("/api/v1/groups", groupRoutes);
 router.use("/api/v1/messages", messageRoutes);
 
@@ -52,5 +53,13 @@ router.use((req: Request, res: Response) => {
 
 // Global error handler
 router.use(errorHandler);
+
+// router.use(
+//   (err: any, req: Request, res: Response, _next: express.NextFunction) => {
+//     console.log("Global Error Handler:", err);
+
+//     errorHandler(err, req, res);
+//   }
+// );
 
 export default router;

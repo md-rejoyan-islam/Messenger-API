@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
+import secret from "../app/secret";
 import {
   forgotPassword,
   loginUser,
+  refreshToken,
   registerUser,
   resetPassword,
 } from "../services/authService";
 import catchAsync from "../utils/catchAsync";
+import { clearCookie, setCookie } from "../utils/cookies";
 import { successResponse } from "../utils/responseHandler";
 
 /**
@@ -45,6 +48,19 @@ const loginUserController = catchAsync(
     const { email, password } = req.body;
 
     const user = await loginUser(email, password);
+
+    // cookie set in the response header
+    setCookie(res, {
+      name: "refreshToken",
+      value: user.refreshToken,
+      maxAge: secret.jwt.refreshTokenExpiresIn * 1000, // convert to milliseconds
+    });
+    setCookie(res, {
+      name: "accessToken",
+      value: user.accessToken,
+      maxAge: secret.jwt.accessTokenExpiresIn * 1000, // convert to milliseconds
+    });
+
     successResponse(res, "User logged in successfully", user);
   }
 );
@@ -89,9 +105,47 @@ const resetPasswordController = catchAsync(
   }
 );
 
+/*
+ * @description Refresh user token
+ * @method GET
+ * @route /api/auth/refresh-token
+ * @success-response 200 {object} { success: true, message: string, data: object } - New token data
+ * @error-response 401 {object} { success: false, message: string, error: object } - Unauthorized
+ * @protected No
+ */
+
+const refreshTokenController = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const { accessToken } = await refreshToken(req.body.refreshToken);
+
+    // Set new access token in cookies
+    setCookie(res, {
+      name: "accessToken",
+      value: accessToken,
+      maxAge: secret.jwt.accessTokenExpiresIn * 1000, // convert to milliseconds
+    });
+
+    successResponse(res, "Token refreshed successfully", {
+      accessToken,
+    });
+  }
+);
+
+const logout = catchAsync(
+  async (_req: Request, res: Response): Promise<void> => {
+    // Clear cookies
+    clearCookie(res, "refreshToken");
+    clearCookie(res, "accessToken");
+
+    successResponse(res, "User logged out successfully");
+  }
+);
+
 export {
   forgotPasswordController,
   loginUserController,
+  logout,
+  refreshTokenController,
   registerUserController,
   resetPasswordController,
 };

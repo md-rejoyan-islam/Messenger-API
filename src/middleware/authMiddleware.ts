@@ -1,38 +1,49 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import User from '../models/userModel';
-import { Document, Types } from 'mongoose';
+import { NextFunction, Request, Response } from "express";
+import * as jwt from "jsonwebtoken";
+import { Types } from "mongoose";
+import secret from "../app/secret";
+import User from "../models/userModel";
+import createError = require("http-errors");
 
 interface DecodedToken {
-    id: Types.ObjectId;
+  id: Types.ObjectId;
 }
 
 interface IUserRequest extends Request {
-    user?: {
-        _id: Types.ObjectId;
-        name: string;
-        email: string;
-    } & Document;
+  user?: typeof User.prototype;
 }
 
-const protect = async (req: IUserRequest, res: Response, next: NextFunction): Promise<void> => {
-    let token: string | undefined;
+const protect = async (
+  req: IUserRequest,
+  _res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const token: string | undefined =
+    req.cookies?.accessToken || req.headers?.authorization?.split(" ")[1];
 
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        try {
-            token = req.headers.authorization.split(' ')[1];
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DecodedToken;
-            req.user = await User.findById(decoded.id).select('-password');
-            next();
-        } catch (error: any) {
-            console.error(error);
-            res.status(401).json({ message: 'Not authorized, token failed' });
-        }
+  if (!token) {
+    throw createError.Unauthorized("Not authorized, no token");
+  }
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      secret.jwt.accessTokenSecret as string
+    ) as DecodedToken;
+
+    const user = await User.findById(decoded.id).select(
+      "_id name email profilePhoto bio"
+    );
+
+    if (!user) {
+      throw createError.Unauthorized("Not authorized, user not found");
     }
 
-    if (!token) {
-        res.status(401).json({ message: 'Not authorized, no token' });
-    }
+    req.user = user;
+    next();
+  } catch (error: any) {
+    throw createError.Unauthorized("Not authorized, token failed");
+  }
 };
 
 export { protect };

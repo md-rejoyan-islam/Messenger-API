@@ -14,7 +14,7 @@ describe('Group API', () => {
     await Group.deleteMany({});
 
     const registerRes = await request(app)
-      .post('/api/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'Test User',
         email: `test_user_${Date.now()}@example.com`,
@@ -27,7 +27,7 @@ describe('Group API', () => {
     testUser = registerRes.body.data;
 
     const otherUserRes = await request(app)
-      .post('/api/users/register')
+      .post('/api/v1/auth/register')
       .send({
         name: 'Other User',
         email: `other_user_${Date.now()}@example.com`,
@@ -41,7 +41,7 @@ describe('Group API', () => {
 
   it('should create a new group', async () => {
     const res = await request(app)
-      .post('/api/groups')
+      .post('/api/v1/groups')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         name: 'Test Group',
@@ -57,7 +57,7 @@ describe('Group API', () => {
 
   it('should add a member to a group', async () => {
     const createGroupRes = await request(app)
-      .post('/api/groups')
+      .post('/api/v1/groups')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         name: 'Test Group',
@@ -68,7 +68,7 @@ describe('Group API', () => {
     const groupId = createGroupRes.body.data._id;
 
     const res = await request(app)
-      .post('/api/groups/add-member')
+      .post('/api/v1/groups/add-member')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         groupId,
@@ -84,7 +84,7 @@ describe('Group API', () => {
 
   it('should remove a member from a group', async () => {
     const createGroupRes = await request(app)
-      .post('/api/groups')
+      .post('/api/v1/groups')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         name: 'Test Group',
@@ -96,7 +96,7 @@ describe('Group API', () => {
     const groupId = createGroupRes.body.data._id;
 
     const res = await request(app)
-      .post('/api/groups/remove-member')
+      .post('/api/v1/groups/remove-member')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
         groupId,

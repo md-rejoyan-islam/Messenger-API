@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application } from "express";
 import corsOptions from "../config/corsConfig";
@@ -6,8 +7,10 @@ import secret from "./secret";
 
 const app: Application = express();
 
+import morgan from "morgan";
+
 if (secret.nodeEnv === "development") {
-  app.use(require("morgan")("dev"));
+  app.use(morgan("dev"));
 }
 
 app.use(
@@ -24,6 +27,8 @@ app.use(
   })
 );
 app.use(cors(corsOptions));
+
+app.use(cookieParser());
 
 app.use(router);
 

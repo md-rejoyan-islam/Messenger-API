@@ -1,9 +1,13 @@
-import express from "express";
+import * as express from "express";
 import {
   acceptFriendRequestController,
   blockUserController,
   cancelFriendRequestController,
   changePasswordController,
+  findFriendsController,
+  getAllFriendsController,
+  getAllSentRequestsController,
+  getFriendRequestController,
   rejectFriendRequestController,
   sendFriendRequestController,
   unblockUserController,
@@ -38,41 +42,61 @@ router.put(
   changePasswordController
 );
 
+// get all friend
+router.get("/friends", getAllFriendsController);
+
 // friend requests
+router.get("/friend-requests", getFriendRequestController);
+
+// get all sending friend requests
+router.get("/sent-requests", getAllSentRequestsController);
+
+// find friends
+router.get("/find-friends", findFriendsController);
+
+// send friend request
 router.post(
-  "/friend-request",
+  "/friend-requests/:id",
   validate(friendRequestSchema),
   sendFriendRequestController
 );
 
 // accept friend request
 router.post(
-  "/friend-request/accept",
+  "/friend-requests/:id/accept",
   validate(friendRequestSchema),
   acceptFriendRequestController
 );
 
 // reject friend request
 router.post(
-  "/friend-request/reject",
+  "/friend-requests/:id/reject",
   validate(friendRequestSchema),
   rejectFriendRequestController
 );
 
 // cancel friend request
 router.post(
-  "/friend-request/cancel",
+  "/friend-request/:id/cancel",
   validate(friendRequestSchema),
   cancelFriendRequestController
 );
 
 // unfriend user
-router.post("/unfriend", validate(friendRequestSchema), unfriendUserController);
+router.post(
+  "/:id/unfriend",
+  validate(friendRequestSchema),
+  unfriendUserController
+);
 
 // block user
-router.post("/block", validate(friendRequestSchema), blockUserController);
+router.post("/:id/block", validate(friendRequestSchema), blockUserController);
 
 // unblock user
-router.post("/unblock", validate(friendRequestSchema), unblockUserController);
+router.post(
+  "/:id/unblock",
+  validate(friendRequestSchema),
+  unblockUserController
+);
 
 export { router as userRoutes };
