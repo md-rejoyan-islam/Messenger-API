@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-import { ObjectId } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import {
   acceptFriendRequest,
   blockUser,
@@ -10,6 +10,7 @@ import {
   getAllFriends,
   getAllSentRequests,
   getFriendRequests,
+  getUserProfileById,
   rejectFriendRequest,
   sendFriendRequest,
   unblockUser,
@@ -34,6 +35,7 @@ import { IUserRequest } from "../utils/types";
 const changePasswordController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
     const { oldPassword, newPassword } = req.body;
+
     const { _id } = req.user!;
 
     await changePassword(_id, oldPassword, newPassword);
@@ -111,10 +113,10 @@ const getAllSentRequestsController = catchAsync(
  */
 const sendFriendRequestController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { userId } = req.body;
+    const { id: userId } = req.params;
     const { _id } = req.user!;
 
-    await sendFriendRequest(_id, userId);
+    await sendFriendRequest(_id, new Types.ObjectId(userId));
     successResponse(res, "Friend request sent");
   }
 );
@@ -131,10 +133,10 @@ const sendFriendRequestController = catchAsync(
  */
 const acceptFriendRequestController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { userId } = req.body;
+    const { id: userId } = req.params;
     const { _id } = req.user!;
 
-    await acceptFriendRequest(_id, userId);
+    await acceptFriendRequest(_id, new Types.ObjectId(userId));
     successResponse(res, "Friend request accepted");
   }
 );
@@ -151,10 +153,10 @@ const acceptFriendRequestController = catchAsync(
  */
 const rejectFriendRequestController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { userId } = req.body;
+    const { id: userId } = req.params;
     const { _id } = req.user!;
 
-    await rejectFriendRequest(_id, userId);
+    await rejectFriendRequest(_id, new Types.ObjectId(userId));
     successResponse(res, "Friend request rejected");
   }
 );
@@ -171,10 +173,10 @@ const rejectFriendRequestController = catchAsync(
  */
 const cancelFriendRequestController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { userId } = req.body;
+    const { id: userId } = req.params;
     const { _id } = req.user!;
 
-    await cancelFriendRequest(_id, userId);
+    await cancelFriendRequest(_id, new Types.ObjectId(userId));
     successResponse(res, "Friend request cancelled");
   }
 );
@@ -191,10 +193,10 @@ const cancelFriendRequestController = catchAsync(
  */
 const unfriendUserController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { userId } = req.body;
+    const { id: userId } = req.params;
     const { _id } = req.user!;
 
-    await unfriendUser(_id, userId);
+    await unfriendUser(_id, new Types.ObjectId(userId));
     successResponse(res, "User unfriended");
   }
 );
@@ -234,11 +236,38 @@ const unblockUserController = catchAsync(
 
 const updateUserProfileController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { name, profilePhoto, bio } = req.body;
+    const profilePhoto = req.file
+      ? req.protocol + "://" + req.host + "/public/" + req.file.filename
+      : undefined;
+
+    const { name, bio } = req.body;
+
     const { _id } = req.user!;
 
     const user = await updateUserProfile(_id, name, profilePhoto, bio);
     successResponse(res, "Profile updated successfully", user);
+  }
+);
+
+// get profile controller
+
+/**
+ * @description Get user profile by ID
+ * @method GET
+ * @route /api/user/profile
+ * @param {string} id - User ID
+ * @success-response 200 {object} user - User profile data
+ * @error-response 404 {string} message - User not found
+ * @error-response 401 {string} message - Not authorized, token failed
+ */
+
+const getUserProfileController = catchAsync(
+  async (req: IUserRequest, res: Response): Promise<void> => {
+    const { _id } = req.user!;
+
+    // Assuming you have a function to get user profile by ID
+    const user = await getUserProfileById(new Types.ObjectId(_id));
+    successResponse(res, "User profile retrieved successfully", user);
   }
 );
 
@@ -273,6 +302,7 @@ export {
   getAllFriendsController,
   getAllSentRequestsController,
   getFriendRequestController,
+  getUserProfileController,
   rejectFriendRequestController,
   sendFriendRequestController,
   unblockUserController,

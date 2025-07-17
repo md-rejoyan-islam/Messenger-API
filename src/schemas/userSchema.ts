@@ -36,8 +36,14 @@ export const userSchema = z.object({
     })
     .optional(),
   friends: z.array(objectIdSchema).optional().default([]),
-  friendRequests: z.array(objectIdSchema).optional().default([]),
-  sentFriendRequests: z.array(objectIdSchema).optional().default([]),
+  friendRequests: z.array(z.object({
+    user: objectIdSchema,
+    createdAt: z.date(),
+  })).optional().default([]),
+  sentFriendRequests: z.array(z.object({
+    user: objectIdSchema,
+    createdAt: z.date(),
+  })).optional().default([]),
   blockedUsers: z.array(objectIdSchema).optional().default([]),
 
   online: z

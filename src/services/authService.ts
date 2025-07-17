@@ -70,7 +70,7 @@ const forgotPassword = async (email: string) => {
     Date.now() + secret.passwordResetTokenExpiration * 1000
   );
 
-  const resetUrl = `${secret.clientUrl}/reset-password/${resetToken}`;
+  const resetUrl = `${secret.clientUrl}/reset-password/?token=${resetToken}`;
 
   try {
     await sendPasswordResetMail({

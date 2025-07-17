@@ -30,16 +30,16 @@ export const resetPasswordSchema = z.object({
 
 const objectIdSchema = z
   .string({
-    required_error: "ObjectId is required",
+    required_error: "Params is required",
     invalid_type_error: "ObjectId must be a string",
   })
   .regex(/^[0-9a-fA-F]{24}$/, {
-    message: "Invalid ObjectId format",
+    message: "Invalid parmas ObjectId format",
   });
 
 export const friendRequestSchema = z.object({
-  body: z.object({
-    userId: objectIdSchema,
+  params: z.object({
+    id: objectIdSchema,
   }),
 });
 
@@ -51,7 +51,6 @@ export const updateUserProfileSchema = z.object({
         invalid_type_error: "Name must be a string",
       })
       .optional(),
-    profilePhoto: z.string().url("Invalid URL format").optional(),
     bio: z
       .string({
         invalid_type_error: "Bio must be a string",

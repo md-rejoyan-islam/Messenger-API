@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import secret from "../app/secret";
+import { errorLogger, logger } from "../utils/logger";
 
 const connectDB = async (): Promise<void> => {
   try {
     const connect = await mongoose.connect(secret.mongoURI);
-    console.log(`MongoDB connected: ${connect.connection.host}`);
+    logger.info(`MongoDB connected: ${connect.connection.host}`);
   } catch (error) {
+    errorLogger.error(error);
     if (error instanceof Error) {
       console.error(`Error connecting to MongoDB: ${error.message}`);
     } else {

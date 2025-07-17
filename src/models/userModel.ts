@@ -8,10 +8,17 @@ interface IUser extends Document {
   password?: string;
   profilePhoto: string;
   friends: Schema.Types.ObjectId[];
-  friendRequests: Schema.Types.ObjectId[];
-  sentFriendRequests: Schema.Types.ObjectId[];
+  friendRequests: {
+    user: Schema.Types.ObjectId;
+    createdAt: Date;
+  }[];
+  sentFriendRequests: {
+    user: Schema.Types.ObjectId;
+    createdAt: Date;
+  }[];
   blockedUsers: Schema.Types.ObjectId[];
   online: boolean;
+  lastSeen?: Date;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   bio?: string;
@@ -48,14 +55,26 @@ const userSchema = new mongoose.Schema<IUser>({
   ],
   friendRequests: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   sentFriendRequests: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   blockedUsers: [
@@ -67,6 +86,10 @@ const userSchema = new mongoose.Schema<IUser>({
   online: {
     type: Boolean,
     default: false,
+  },
+  lastSeen: {
+    type: Date,
+    default: Date.now,
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
@@ -83,6 +106,11 @@ userSchema.pre<IUser>("save", async function (next) {
 userSchema.methods.matchPassword = async function (
   enteredPassword: string
 ): Promise<boolean> {
+  console.log(this.password);
+  console.log(enteredPassword);
+
+  console.log(await bcrypt.compare(enteredPassword, this.password!));
+
   return await bcrypt.compare(enteredPassword, this.password!);
 };
 

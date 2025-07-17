@@ -8,6 +8,7 @@ import {
   getAllFriendsController,
   getAllSentRequestsController,
   getFriendRequestController,
+  getUserProfileController,
   rejectFriendRequestController,
   sendFriendRequestController,
   unblockUserController,
@@ -17,20 +18,23 @@ import {
 
 import { protect } from "../middleware/authMiddleware";
 import validate from "../middleware/validateMiddleware";
+import { uploadSingleImage } from "../utils/multer";
 import {
   changePasswordSchema,
   friendRequestSchema,
-  updateUserProfileSchema,
 } from "../validations/userValidation";
 
 const router = express.Router();
 
 router.use(protect);
 
+// get profile
+router.get("/profile", getUserProfileController);
 // update profile
 router.put(
   "/profile",
-  validate(updateUserProfileSchema),
+  // validate(updateUserProfileSchema),
+  uploadSingleImage,
   updateUserProfileController
 );
 
@@ -77,7 +81,7 @@ router.post(
 
 // cancel friend request
 router.post(
-  "/friend-request/:id/cancel",
+  "/friend-requests/:id/cancel",
   validate(friendRequestSchema),
   cancelFriendRequestController
 );
@@ -89,10 +93,10 @@ router.post(
   unfriendUserController
 );
 
-// block user
+// block friend
 router.post("/:id/block", validate(friendRequestSchema), blockUserController);
 
-// unblock user
+// unblock friend
 router.post(
   "/:id/unblock",
   validate(friendRequestSchema),
