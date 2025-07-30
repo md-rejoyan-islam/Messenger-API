@@ -8,6 +8,7 @@ import {
   getAllFriendsController,
   getAllSentRequestsController,
   getFriendRequestController,
+  getUserByIdController,
   getUserProfileController,
   rejectFriendRequestController,
   sendFriendRequestController,
@@ -102,5 +103,8 @@ router.post(
   validate(friendRequestSchema),
   unblockUserController
 );
+
+// get user profile by id
+router.get("/:id", getUserByIdController);
 
 export { router as userRoutes };

@@ -18,14 +18,14 @@ app.use(
   express.json({
     limit: "10mb",
     type: "application/json",
-  })
+  }),
 );
 app.use(
   express.urlencoded({
     extended: true,
     limit: "10mb",
     type: "application/x-www-form-urlencoded",
-  })
+  }),
 );
 // static files in public directory
 app.use("/public", express.static(path.join(__dirname, "../../public")));

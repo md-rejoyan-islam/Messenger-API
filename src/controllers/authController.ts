@@ -142,10 +142,10 @@ const logout = catchAsync(
 );
 
 export {
-  forgotPasswordController,
   loginUserController,
-  logout,
-  refreshTokenController,
   registerUserController,
+  logout,
+  forgotPasswordController,
   resetPasswordController,
+  refreshTokenController,
 };

@@ -24,9 +24,9 @@ export const userSchema = z.object({
     })
     .min(6, "Password must be at least 6 characters"),
 
-  profilePhoto: z
+  avatar: z
     .string({
-      invalid_type_error: "Profile photo must be a string",
+      invalid_type_error: "Avatar must be a string",
     })
     .optional()
     .default(""),

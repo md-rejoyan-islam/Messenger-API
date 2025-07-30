@@ -6,7 +6,7 @@ import { sendPasswordResetMail } from "../mails/passwordResetMail";
 import User from "../models/userModel";
 import { generateTokens } from "../utils/jwt";
 
-const registerUser = async (name: string, email: string, password: string) => {
+const registerUser = async (name: string, email: string, passwd: string) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -16,12 +16,13 @@ const registerUser = async (name: string, email: string, password: string) => {
   const user = await User.create({
     name,
     email,
-    password,
+    passwd,
   });
 
   // send welcome email
 
-  const { password: _, ...withoutPasword } = user.toObject();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...withoutPasword } = user.toObject();
   return withoutPasword;
 };
 
@@ -41,7 +42,7 @@ const loginUser = async (email: string, password: string) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        profilePhoto: user.profilePhoto,
+        avatar: user.avatar,
         bio: user.bio,
       },
     };
@@ -67,7 +68,7 @@ const forgotPassword = async (email: string) => {
   user.resetPasswordToken = hashToken;
 
   user.resetPasswordExpires = new Date(
-    Date.now() + secret.passwordResetTokenExpiration * 1000
+    Date.now() + secret.passwordResetTokenExpiration * 1000,
   );
 
   const resetUrl = `${secret.clientUrl}/reset-password/?token=${resetToken}`;
@@ -79,7 +80,7 @@ const forgotPassword = async (email: string) => {
       resetLink: resetUrl,
     });
     await user.save();
-  } catch (error) {
+  } catch {
     throw createError.InternalServerError("Error sending email");
   }
 };
@@ -108,7 +109,7 @@ const refreshToken = async (token: string) => {
   try {
     const decoded = jwt.verify(
       token,
-      secret.jwt.refreshTokenSecret as string
+      secret.jwt.refreshTokenSecret as string,
     ) as JwtPayload as { id: string; email: string };
 
     if (!decoded) {
@@ -129,7 +130,7 @@ const refreshToken = async (token: string) => {
     return {
       accessToken,
     };
-  } catch (error) {
+  } catch {
     throw createError.Unauthorized("Invalid refresh token");
   }
 };

@@ -236,7 +236,7 @@ const unblockUserController = catchAsync(
 
 const updateUserProfileController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const profilePhoto = req.file
+    const avatar = req.file
       ? req.protocol + "://" + req.host + "/public/" + req.file.filename
       : undefined;
 
@@ -244,7 +244,7 @@ const updateUserProfileController = catchAsync(
 
     const { _id } = req.user!;
 
-    const user = await updateUserProfile(_id, name, profilePhoto, bio);
+    const user = await updateUserProfile(_id, name, avatar, bio);
     successResponse(res, "Profile updated successfully", user);
   }
 );
@@ -293,6 +293,14 @@ const findFriendsController = catchAsync(
   }
 );
 
+const getUserByIdController = catchAsync(
+  async (req: IUserRequest, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const user = await getUserProfileById(new Types.ObjectId(id));
+    successResponse(res, "User profile retrieved successfully", user);
+  }
+);
+
 export {
   acceptFriendRequestController,
   blockUserController,
@@ -302,6 +310,7 @@ export {
   getAllFriendsController,
   getAllSentRequestsController,
   getFriendRequestController,
+  getUserByIdController,
   getUserProfileController,
   rejectFriendRequestController,
   sendFriendRequestController,

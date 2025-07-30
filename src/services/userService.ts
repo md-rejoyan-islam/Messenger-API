@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import createError from "http-errors";
 import { ObjectId, Types } from "mongoose";
 import User from "../models/userModel";
@@ -5,7 +6,7 @@ import User from "../models/userModel";
 const changePassword = async (
   userId: Types.ObjectId,
   oldPassword: string,
-  newPassword: string
+  newPassword: string,
 ) => {
   const user = await User.findById(userId);
 
@@ -16,7 +17,7 @@ const changePassword = async (
   if (await user.matchPassword(newPassword)) {
     throw createError(
       400,
-      "New password cannot be the same as the old password"
+      "New password cannot be the same as the old password",
     );
   }
 
@@ -31,7 +32,7 @@ const changePassword = async (
 // get all friends
 const getAllFriends = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId)
-    .populate("friends", "name profilePhoto online lastSeen ")
+    .populate("friends", "name avatar online lastSeen ")
     .select("friends");
   if (!user) {
     throw createError(404, "User not found");
@@ -40,7 +41,7 @@ const getAllFriends = async (userId: Types.ObjectId) => {
   return (user.friends as any[]).map((friend) => ({
     _id: friend._id,
     name: friend.name,
-    profilePhoto: friend.profilePhoto,
+    avatar: friend.avatar,
     online: friend.online,
     lastSeen: friend.lastSeen,
   }));
@@ -64,7 +65,7 @@ const getAllSentRequests = async (userId: Types.ObjectId) => {
 
 const sendFriendRequest = async (
   senderId: Types.ObjectId,
-  recipientId: Types.ObjectId
+  recipientId: Types.ObjectId,
 ) => {
   const user = await User.findById(senderId);
   if (!user) {
@@ -94,7 +95,7 @@ const sendFriendRequest = async (
 
 const acceptFriendRequest = async (
   currentUserId: Types.ObjectId,
-  friendId: Types.ObjectId
+  friendId: Types.ObjectId,
 ) => {
   const user = await User.findById(friendId);
   if (!user) {
@@ -113,7 +114,7 @@ const acceptFriendRequest = async (
 
 const rejectFriendRequest = async (
   currentUserId: Types.ObjectId,
-  friendId: Types.ObjectId
+  friendId: Types.ObjectId,
 ) => {
   const user = await User.findById(friendId).select("sentFriendRequests");
   if (!user) {
@@ -122,7 +123,7 @@ const rejectFriendRequest = async (
 
   if (
     !user.sentFriendRequests.some(
-      (request) => request.user.toString() === currentUserId.toString()
+      (request) => request.user.toString() === currentUserId.toString(),
     )
   ) {
     throw createError(404, "Friend request not found");
@@ -138,7 +139,7 @@ const rejectFriendRequest = async (
 
 const cancelFriendRequest = async (
   currentUserId: Types.ObjectId,
-  friendId: Types.ObjectId
+  friendId: Types.ObjectId,
 ) => {
   const user = await User.findById(friendId).select("friendRequests");
   if (!user) {
@@ -147,7 +148,7 @@ const cancelFriendRequest = async (
 
   if (
     !user.friendRequests.some(
-      (request) => request.user.toString() === currentUserId.toString()
+      (request) => request.user.toString() === currentUserId.toString(),
     )
   ) {
     throw createError(404, "Friend request not found");
@@ -163,7 +164,7 @@ const cancelFriendRequest = async (
 
 const unfriendUser = async (
   currentUserId: Types.ObjectId,
-  friendId: Types.ObjectId
+  friendId: Types.ObjectId,
 ) => {
   const user = await User.findById(friendId).select("friends");
   if (!user) {
@@ -172,7 +173,7 @@ const unfriendUser = async (
 
   if (
     !user.friends.some(
-      (friendId) => friendId.toString() === currentUserId.toString()
+      (friendId) => friendId.toString() === currentUserId.toString(),
     )
   ) {
     throw createError(404, "User is not a friend");
@@ -184,7 +185,7 @@ const unfriendUser = async (
 
 const blockUser = async (
   currentUserId: Types.ObjectId,
-  userIdToBlock: Types.ObjectId
+  userIdToBlock: Types.ObjectId,
 ) => {
   const user = await User.findById(userIdToBlock);
   if (!user) {
@@ -197,7 +198,7 @@ const blockUser = async (
 
 const unblockUser = async (
   currentUserId: Types.ObjectId,
-  userIdToUnblock: Types.ObjectId
+  userIdToUnblock: Types.ObjectId,
 ) => {
   const user = await User.findById(userIdToUnblock);
   if (!user) {
@@ -210,8 +211,8 @@ const unblockUser = async (
 const updateUserProfile = async (
   userId: Types.ObjectId,
   name: string,
-  profilePhoto?: string,
-  bio?: string
+  avatar?: string,
+  bio?: string,
 ) => {
   const user = await User.findById(userId);
 
@@ -220,7 +221,7 @@ const updateUserProfile = async (
   }
 
   user.name = name || user.name;
-  user.profilePhoto = profilePhoto || user.profilePhoto;
+  user.avatar = avatar || user.avatar;
   user.bio = bio || user.bio;
 
   const updatedUser = await user.save();
@@ -229,7 +230,7 @@ const updateUserProfile = async (
     _id: updatedUser._id,
     name: updatedUser.name,
     email: updatedUser.email,
-    profilePhoto: updatedUser.profilePhoto,
+    avatar: updatedUser.avatar,
     bio: updatedUser.bio,
   };
 };
@@ -237,18 +238,16 @@ const updateUserProfile = async (
 // get user profile
 const getUserProfileById = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId).select(
-    "-password -blockedUsers  -sentFriendRequests -online -__v"
+    "-password -blockedUsers  -sentFriendRequests -online -__v",
   );
   if (!user) {
     throw createError(404, "User not found");
   }
 
-  console.log("user profile", user);
-
   return {
     _id: user._id,
     name: user.name,
-    profilePhoto: user.profilePhoto,
+    avatar: user.avatar,
     bio: user.bio,
     email: user.email,
     friends: user.friends.length,
@@ -257,7 +256,7 @@ const getUserProfileById = async (userId: Types.ObjectId) => {
 
 const findFriends = async (userId: ObjectId, query?: string) => {
   const user = await User.findById(userId).select(
-    "friends sentFriendRequests friendRequests"
+    "friends sentFriendRequests friendRequests",
   );
 
   if (!user) {
@@ -282,7 +281,7 @@ const findFriends = async (userId: ObjectId, query?: string) => {
   }
 
   const users = await User.find(filterOptions).select(
-    "-password -friends -friendRequests -blockedUsers -email -sentFriendRequests -online -__v"
+    "-password -friends -friendRequests -blockedUsers -email -sentFriendRequests -online -__v",
   );
 
   return users;
@@ -290,7 +289,7 @@ const findFriends = async (userId: ObjectId, query?: string) => {
 
 const getFriendRequests = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId)
-    .populate("friendRequests.user", "name profilePhoto")
+    .populate("friendRequests.user", "name avatar")
     .select("friendRequests");
   if (!user) {
     throw createError(404, "User not found");

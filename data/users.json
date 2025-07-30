@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Rejoyan Islam",
+    "email": "rejoyan.islam1@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Passionate developer exploring new horizons in web technology."
+  },
+  {
+    "name": "Ariana Das",
+    "email": "ariana.das2@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Creative thinker who loves designing intuitive interfaces."
+  },
+  {
+    "name": "Zayan Ahmed",
+    "email": "zayan.ahmed3@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Enthusiastic learner fascinated by AI and data science."
+  },
+  {
+    "name": "Maya Rahman",
+    "email": "maya.rahman4@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "UX researcher driven by curiosity and human-centered design."
+  },
+  {
+    "name": "Farhan Chowdhury",
+    "email": "farhan.chowdhury5@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Backend engineer with a love for scalable architecture."
+  },
+  {
+    "name": "Layla Karim",
+    "email": "layla.karim6@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Full-stack coder blending art and logic in every project."
+  },
+  {
+    "name": "Rafiul Hasan",
+    "email": "rafiul.hasan7@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Cloud enthusiast building modern deployment workflows."
+  },
+  {
+    "name": "Sadia Noor",
+    "email": "sadia.noor8@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Curious mind diving deep into frontend performance."
+  },
+  {
+    "name": "Imran Hossain",
+    "email": "imran.hossain9@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Problem solver who loves debugging complex systems."
+  },
+  {
+    "name": "Nadia Chowdhury",
+    "email": "nadia.chowdhury10@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Storyteller translating data into meaningful insights."
+  },
+  {
+    "name": "Yasin Mahmud",
+    "email": "yasin.mahmud11@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Tech explorer who enjoys building APIs and services."
+  },
+  {
+    "name": "Meher Khan",
+    "email": "meher.khan12@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "UI engineer passionate about smooth digital experiences."
+  },
+  {
+    "name": "Rayan Siddique",
+    "email": "rayan.siddique13@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Optimist who loves refactoring old code to new standards."
+  },
+  {
+    "name": "Anika Rahim",
+    "email": "anika.rahim14@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Minimalist designer focused on clean user flows."
+  },
+  {
+    "name": "Adnan Kabir",
+    "email": "adnan.kabir15@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Performance geek optimizing every millisecond of UI."
+  },
+  {
+    "name": "Tahia Yasmin",
+    "email": "tahia.yasmin16@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Frontend enthusiast blending code and creativity."
+  },
+  {
+    "name": "Samiul Rafi",
+    "email": "samiul.rafi17@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Problem solver inspired by elegant solutions."
+  },
+  {
+    "name": "Shirin Alam",
+    "email": "shirin.alam18@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Human-centered designer with a focus on accessibility."
+  },
+  {
+    "name": "Tariq Nabil",
+    "email": "tariq.nabil19@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Innovator always experimenting with new stacks."
+  },
+  {
+    "name": "Maliha Nawar",
+    "email": "maliha.nawar20@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Content creator merging words and code seamlessly."
+  },
+  {
+    "name": "Zahin Mirza",
+    "email": "zahin.mirza21@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Tech lover transforming complex ideas into simple apps."
+  },
+  {
+    "name": "Faria Nusaiba",
+    "email": "faria.nusaiba22@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Digital explorer connecting creativity with innovation."
+  },
+  {
+    "name": "Mahin Haque",
+    "email": "mahin.haque23@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Coding enthusiast who values clean, readable code."
+  },
+  {
+    "name": "Amira Zohra",
+    "email": "amira.zohra24@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Innovative thinker passionate about creative solutions."
+  },
+  {
+    "name": "Rakibul Amin",
+    "email": "rakibul.amin25@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Visionary backend developer focused on performance."
+  },
+  {
+    "name": "Sara Iqbal",
+    "email": "sara.iqbal26@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Empathic UI designer crafting seamless experiences."
+  },
+  {
+    "name": "Nazim Reza",
+    "email": "nazim.reza27@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Technology explorer always eager to learn something new."
+  },
+  {
+    "name": "Samira Akter",
+    "email": "samira.akter28@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Code poet with a love for interactive storytelling."
+  },
+  {
+    "name": "Hasibul Karim",
+    "email": "hasibul.karim29@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "DevOps enthusiast making deployments effortless."
+  },
+  {
+    "name": "Shafina Noor",
+    "email": "shafina.noor30@example.com",
+    "password": "$2b$10$5fFohW6yyxRuRFsjtJuwXeUQjD15.FW3YuvNbevWwUPU1foCHb7aG",
+    "avatar": "http://localhost:5050/public/avatar.png",
+    "bio": "Curator of experiences through code and design."
+  }
+]

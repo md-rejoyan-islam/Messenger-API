@@ -4,7 +4,9 @@ interface IMessage extends Document {
   sender: Schema.Types.ObjectId;
   recipient?: Schema.Types.ObjectId;
   group?: Schema.Types.ObjectId;
-  content: string;
+  content?: string;
+  url?: string;
+  media?: string;
   seen: boolean;
 }
 
@@ -25,7 +27,12 @@ const messageSchema = new mongoose.Schema<IMessage>(
     },
     content: {
       type: String,
-      required: true,
+    },
+    url: {
+      type: String,
+    },
+    media: {
+      type: String,
     },
     seen: {
       type: Boolean,

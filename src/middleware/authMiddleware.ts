@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import createError from "http-errors";
 import * as jwt from "jsonwebtoken";
 import { Types } from "mongoose";
 import secret from "../app/secret";
 import User from "../models/userModel";
-import createError = require("http-errors");
 
 interface DecodedToken {
   id: Types.ObjectId;
@@ -16,7 +16,7 @@ interface IUserRequest extends Request {
 const protect = async (
   req: IUserRequest,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const token: string | undefined =
     req.cookies?.accessToken || req.headers?.authorization?.split(" ")[1];
@@ -28,11 +28,11 @@ const protect = async (
   try {
     const decoded = jwt.verify(
       token,
-      secret.jwt.accessTokenSecret as string
+      secret.jwt.accessTokenSecret as string,
     ) as DecodedToken;
 
     const user = await User.findById(decoded.id).select(
-      "_id name email profilePhoto bio"
+      "_id name email avatar bio",
     );
 
     if (!user) {
@@ -41,7 +41,7 @@ const protect = async (
 
     req.user = user;
     next();
-  } catch (error: any) {
+  } catch {
     throw createError.Unauthorized("Not authorized, token failed");
   }
 };

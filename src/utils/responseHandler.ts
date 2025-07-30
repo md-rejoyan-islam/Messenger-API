@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Response } from "express";
 
 interface ApiResponse {
@@ -12,7 +13,7 @@ const successResponse = (
   res: Response,
   message: string,
   data: any = {},
-  statusCode: number = 200
+  statusCode: number = 200,
 ): Response => {
   const response: ApiResponse = {
     success: true,
@@ -27,7 +28,7 @@ const errorResponse = (
   res: Response,
   message: string,
   error: any = {},
-  statusCode: number = 500
+  statusCode: number = 500,
 ): Response => {
   const response: ApiResponse = {
     success: false,

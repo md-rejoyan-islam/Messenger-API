@@ -6,7 +6,7 @@ interface IUser extends Document {
   name: string;
   email: string;
   password?: string;
-  profilePhoto: string;
+  avatar: string;
   friends: Schema.Types.ObjectId[];
   friendRequests: {
     user: Schema.Types.ObjectId;
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
-  profilePhoto: {
+  avatar: {
     type: String,
     default: null,
   },

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 import { errorResponse } from "../utils/responseHandler";
@@ -6,7 +7,8 @@ const errorHandler = async (
   err: any,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction,
 ) => {
   let message = err.message || "Something went wrong";
   let statusCode = err.statusCode || 500;
@@ -20,7 +22,7 @@ const errorHandler = async (
   // Mongoose duplicate key
   if (err.code === 11000) {
     message = `Duplicate field value entered: ${Object.keys(
-      err.keyValue
+      err.keyValue,
     )} already exists`;
     statusCode = 400;
   }
