@@ -1,4 +1,4 @@
-import * as express from "express";
+import * as express from 'express';
 import {
   acceptFriendRequestController,
   blockUserController,
@@ -15,96 +15,96 @@ import {
   unblockUserController,
   unfriendUserController,
   updateUserProfileController,
-} from "../controllers/userController";
+} from '../controllers/userController';
 
-import { protect } from "../middleware/authMiddleware";
-import validate from "../middleware/validateMiddleware";
-import { uploadSingleImage } from "../utils/multer";
+import { protect } from '../middleware/authMiddleware';
+import validate from '../middleware/validateMiddleware';
+import { uploadSingleImage } from '../utils/multer';
 import {
   changePasswordSchema,
   friendRequestSchema,
-} from "../validations/userValidation";
+} from '../validations/userValidation';
 
 const router = express.Router();
 
 router.use(protect);
 
 // get profile
-router.get("/profile", getUserProfileController);
+router.get('/profile', getUserProfileController);
 // update profile
 router.put(
-  "/profile",
+  '/profile',
   // validate(updateUserProfileSchema),
   uploadSingleImage,
-  updateUserProfileController
+  updateUserProfileController,
 );
 
 // change password
 router.put(
-  "/change-password",
+  '/change-password',
   protect,
   validate(changePasswordSchema),
-  changePasswordController
+  changePasswordController,
 );
 
 // get all friend
-router.get("/friends", getAllFriendsController);
+router.get('/friends', getAllFriendsController);
 
 // friend requests
-router.get("/friend-requests", getFriendRequestController);
+router.get('/friend-requests', getFriendRequestController);
 
 // get all sending friend requests
-router.get("/sent-requests", getAllSentRequestsController);
+router.get('/sent-requests', getAllSentRequestsController);
 
 // find friends
-router.get("/find-friends", findFriendsController);
+router.get('/find-friends', findFriendsController);
 
 // send friend request
 router.post(
-  "/friend-requests/:id",
+  '/friend-requests/:id',
   validate(friendRequestSchema),
-  sendFriendRequestController
+  sendFriendRequestController,
 );
 
 // accept friend request
 router.post(
-  "/friend-requests/:id/accept",
+  '/friend-requests/:id/accept',
   validate(friendRequestSchema),
-  acceptFriendRequestController
+  acceptFriendRequestController,
 );
 
 // reject friend request
 router.post(
-  "/friend-requests/:id/reject",
+  '/friend-requests/:id/reject',
   validate(friendRequestSchema),
-  rejectFriendRequestController
+  rejectFriendRequestController,
 );
 
 // cancel friend request
 router.post(
-  "/friend-requests/:id/cancel",
+  '/friend-requests/:id/cancel',
   validate(friendRequestSchema),
-  cancelFriendRequestController
+  cancelFriendRequestController,
 );
 
 // unfriend user
 router.post(
-  "/:id/unfriend",
+  '/:id/unfriend',
   validate(friendRequestSchema),
-  unfriendUserController
+  unfriendUserController,
 );
 
 // block friend
-router.post("/:id/block", validate(friendRequestSchema), blockUserController);
+router.post('/:id/block', validate(friendRequestSchema), blockUserController);
 
 // unblock friend
 router.post(
-  "/:id/unblock",
+  '/:id/unblock',
   validate(friendRequestSchema),
-  unblockUserController
+  unblockUserController,
 );
 
 // get user profile by id
-router.get("/:id", getUserByIdController);
+router.get('/:id', getUserByIdController);
 
 export { router as userRoutes };

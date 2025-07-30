@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const objectIdSchema = z
   .string()
-  .regex(/^[a-fA-F0-9]{24}$/, "Invalid ObjectId");
+  .regex(/^[a-fA-F0-9]{24}$/, 'Invalid ObjectId');
 
 export const messageSchema = z.object({
   sender: objectIdSchema,
@@ -13,7 +13,7 @@ export const messageSchema = z.object({
   media: z.string().optional(),
   seen: z
     .boolean({
-      invalid_type_error: "Seen status must be a boolean",
+      invalid_type_error: 'Seen status must be a boolean',
     })
     .optional()
     .default(false),

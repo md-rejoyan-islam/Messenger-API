@@ -38,13 +38,11 @@ describe('User API', () => {
   });
 
   it('should register a new user', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/register')
-      .send({
-        name: 'New User',
-        email: 'new@example.com',
-        password: 'newpassword123',
-      });
+    const res = await request(app).post('/api/v1/auth/register').send({
+      name: 'New User',
+      email: 'new@example.com',
+      password: 'newpassword123',
+    });
     expect(res.statusCode).toEqual(201);
     expect(res.body.success).toBe(true);
     expect(res.body.data).toHaveProperty('token');
@@ -52,45 +50,37 @@ describe('User API', () => {
 
   it('should not register a user with existing email', async () => {
     // Register a user first
-    await request(app)
-      .post('/api/v1/auth/register')
-      .send({
-        name: 'Existing User',
-        email: 'existing@example.com',
-        password: 'password123',
-      });
+    await request(app).post('/api/v1/auth/register').send({
+      name: 'Existing User',
+      email: 'existing@example.com',
+      password: 'password123',
+    });
 
-    const res = await request(app)
-      .post('/api/v1/auth/register')
-      .send({
-        name: 'Another User',
-        email: 'existing@example.com',
-        password: 'password456',
-      });
+    const res = await request(app).post('/api/v1/auth/register').send({
+      name: 'Another User',
+      email: 'existing@example.com',
+      password: 'password456',
+    });
     expect(res.statusCode).toEqual(400);
     expect(res.body.success).toBe(false);
     expect(res.body.message).toEqual('User with that email already exists');
   });
 
   it('should login an existing user', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: testUser.email,
-        password: 'password123',
-      });
+    const res = await request(app).post('/api/v1/auth/login').send({
+      email: testUser.email,
+      password: 'password123',
+    });
     expect(res.statusCode).toEqual(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data).toHaveProperty('token');
   });
 
   it('should not login with invalid credentials', async () => {
-    const res = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: 'test@example.com',
-        password: 'wrongpassword',
-      });
+    const res = await request(app).post('/api/v1/auth/login').send({
+      email: 'test@example.com',
+      password: 'wrongpassword',
+    });
     expect(res.statusCode).toEqual(401);
     expect(res.body.success).toBe(false);
     expect(res.body.message).toEqual('Invalid email or password');
@@ -108,7 +98,9 @@ describe('User API', () => {
     expect(res.body.message).toEqual('Friend request sent');
 
     const updatedOtherUser = await User.findById(otherUser._id);
-    expect(updatedOtherUser?.friendRequests).toContainEqual(new Types.ObjectId(testUser._id));
+    expect(updatedOtherUser?.friendRequests).toContainEqual(
+      new Types.ObjectId(testUser._id),
+    );
   });
 
   it('should accept a friend request', async () => {
@@ -142,10 +134,18 @@ describe('User API', () => {
     const updatedTestUser = await User.findById(testUser._id);
     const updatedOtherUser = await User.findById(otherUser._id);
 
-    expect(updatedTestUser?.friends).toContainEqual(new Types.ObjectId(otherUser._id));
-    expect(updatedOtherUser?.friends).toContainEqual(new Types.ObjectId(testUser._id));
-    expect(updatedTestUser?.sentFriendRequests).not.toContainEqual(new Types.ObjectId(otherUser._id));
-    expect(updatedOtherUser?.friendRequests).not.toContainEqual(new Types.ObjectId(testUser._id));
+    expect(updatedTestUser?.friends).toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
+    expect(updatedOtherUser?.friends).toContainEqual(
+      new Types.ObjectId(testUser._id),
+    );
+    expect(updatedTestUser?.sentFriendRequests).not.toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
+    expect(updatedOtherUser?.friendRequests).not.toContainEqual(
+      new Types.ObjectId(testUser._id),
+    );
   });
 
   it('should reject a friend request', async () => {
@@ -179,8 +179,12 @@ describe('User API', () => {
     const updatedTestUser = await User.findById(testUser._id);
     const updatedOtherUser = await User.findById(otherUser._id);
 
-    expect(updatedTestUser?.sentFriendRequests).not.toContainEqual(new Types.ObjectId(otherUser._id));
-    expect(updatedOtherUser?.friendRequests).not.toContainEqual(new Types.ObjectId(testUser._id));
+    expect(updatedTestUser?.sentFriendRequests).not.toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
+    expect(updatedOtherUser?.friendRequests).not.toContainEqual(
+      new Types.ObjectId(testUser._id),
+    );
   });
 
   it('should cancel a sent friend request', async () => {
@@ -206,8 +210,12 @@ describe('User API', () => {
     const updatedTestUser = await User.findById(testUser._id);
     const updatedOtherUser = await User.findById(otherUser._id);
 
-    expect(updatedTestUser?.sentFriendRequests).not.toContainEqual(new Types.ObjectId(otherUser._id));
-    expect(updatedOtherUser?.friendRequests).not.toContainEqual(new Types.ObjectId(testUser._id));
+    expect(updatedTestUser?.sentFriendRequests).not.toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
+    expect(updatedOtherUser?.friendRequests).not.toContainEqual(
+      new Types.ObjectId(testUser._id),
+    );
   });
 
   it('should unfriend a user', async () => {
@@ -246,8 +254,12 @@ describe('User API', () => {
     const updatedTestUser = await User.findById(testUser._id);
     const updatedOtherUser = await User.findById(otherUser._id);
 
-    expect(updatedTestUser?.friends).not.toContainEqual(new Types.ObjectId(otherUser._id));
-    expect(updatedOtherUser?.friends).not.toContainEqual(new Types.ObjectId(testUser._id));
+    expect(updatedTestUser?.friends).not.toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
+    expect(updatedOtherUser?.friends).not.toContainEqual(
+      new Types.ObjectId(testUser._id),
+    );
   });
 
   it('should block a user', async () => {
@@ -262,7 +274,9 @@ describe('User API', () => {
     expect(res.body.message).toEqual('User blocked');
 
     const updatedTestUser = await User.findById(testUser._id);
-    expect(updatedTestUser?.blockedUsers).toContainEqual(new Types.ObjectId(otherUser._id));
+    expect(updatedTestUser?.blockedUsers).toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
   });
 
   it('should unblock a user', async () => {
@@ -286,7 +300,9 @@ describe('User API', () => {
     expect(res.body.message).toEqual('User unblocked');
 
     const updatedTestUser = await User.findById(testUser._id);
-    expect(updatedTestUser?.blockedUsers).not.toContainEqual(new Types.ObjectId(otherUser._id));
+    expect(updatedTestUser?.blockedUsers).not.toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
   });
 
   it('should update user profile', async () => {
@@ -301,11 +317,15 @@ describe('User API', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.message).toEqual('Profile updated successfully');
     expect(res.body.data.name).toEqual('Updated Name');
-    expect(res.body.data.profilePhoto).toEqual('http://example.com/new-photo.jpg');
+    expect(res.body.data.profilePhoto).toEqual(
+      'http://example.com/new-photo.jpg',
+    );
 
     const updatedUser = await User.findById(testUser._id);
     expect(updatedUser?.name).toEqual('Updated Name');
-    expect(updatedUser?.profilePhoto).toEqual('http://example.com/new-photo.jpg');
+    expect(updatedUser?.profilePhoto).toEqual(
+      'http://example.com/new-photo.jpg',
+    );
   });
 
   it('should change user password', async () => {
@@ -321,12 +341,10 @@ describe('User API', () => {
     expect(res.body.message).toEqual('Password changed successfully');
 
     // Try logging in with new password
-    const loginRes = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: testUser.email,
-        password: 'newsecurepassword',
-      });
+    const loginRes = await request(app).post('/api/v1/auth/login').send({
+      email: testUser.email,
+      password: 'newsecurepassword',
+    });
     expect(loginRes.statusCode).toEqual(200);
     expect(loginRes.body.success).toBe(true);
   });

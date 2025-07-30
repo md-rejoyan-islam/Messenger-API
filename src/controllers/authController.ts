@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import secret from "../app/secret";
+import { Request, Response } from 'express';
+import secret from '../app/secret';
 import {
   forgotPassword,
   loginUser,
   refreshToken,
   registerUser,
   resetPassword,
-} from "../services/authService";
-import catchAsync from "../utils/catchAsync";
-import { clearCookie, setCookie } from "../utils/cookies";
-import { successResponse } from "../utils/responseHandler";
+} from '../services/authService';
+import catchAsync from '../utils/catchAsync';
+import { clearCookie, setCookie } from '../utils/cookies';
+import { successResponse } from '../utils/responseHandler';
 
 /**
  * @description Register a new user
@@ -28,8 +28,8 @@ const registerUserController = catchAsync(
     const { name, email, password } = req.body;
 
     const user = await registerUser(name, email, password);
-    successResponse(res, "User registered successfully", user, 201);
-  }
+    successResponse(res, 'User registered successfully', user, 201);
+  },
 );
 
 /**
@@ -51,18 +51,18 @@ const loginUserController = catchAsync(
 
     // cookie set in the response header
     setCookie(res, {
-      name: "refreshToken",
+      name: 'refreshToken',
       value: user.refreshToken,
       maxAge: secret.jwt.refreshTokenExpiresIn * 1000, // convert to milliseconds
     });
     setCookie(res, {
-      name: "accessToken",
+      name: 'accessToken',
       value: user.accessToken,
       maxAge: secret.jwt.accessTokenExpiresIn * 1000, // convert to milliseconds
     });
 
-    successResponse(res, "User logged in successfully", user);
-  }
+    successResponse(res, 'User logged in successfully', user);
+  },
 );
 
 /**
@@ -80,8 +80,8 @@ const forgotPasswordController = catchAsync(
     const { email } = req.body;
 
     await forgotPassword(email);
-    successResponse(res, "Password reset email sent successfully");
-  }
+    successResponse(res, 'Password reset email sent successfully');
+  },
 );
 
 /**
@@ -101,8 +101,8 @@ const resetPasswordController = catchAsync(
     const { password } = req.body;
 
     await resetPassword(token, password);
-    successResponse(res, "Password updated successfully");
-  }
+    successResponse(res, 'Password updated successfully');
+  },
 );
 
 /*
@@ -120,25 +120,25 @@ const refreshTokenController = catchAsync(
 
     // Set new access token in cookies
     setCookie(res, {
-      name: "accessToken",
+      name: 'accessToken',
       value: accessToken,
       maxAge: secret.jwt.accessTokenExpiresIn * 1000, // convert to milliseconds
     });
 
-    successResponse(res, "Token refreshed successfully", {
+    successResponse(res, 'Token refreshed successfully', {
       accessToken,
     });
-  }
+  },
 );
 
 const logout = catchAsync(
   async (_req: Request, res: Response): Promise<void> => {
     // Clear cookies
-    clearCookie(res, "refreshToken");
-    clearCookie(res, "accessToken");
+    clearCookie(res, 'refreshToken');
+    clearCookie(res, 'accessToken');
 
-    successResponse(res, "User logged out successfully");
-  }
+    successResponse(res, 'User logged out successfully');
+  },
 );
 
 export {

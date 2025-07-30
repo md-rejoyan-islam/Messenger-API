@@ -1,30 +1,30 @@
-import * as express from "express";
+import * as express from 'express';
 import {
   addGroupMemberController,
   createGroupController,
   removeGroupMemberController,
-} from "../controllers/groupController";
-import { protect } from "../middleware/authMiddleware";
-import validate from "../middleware/validateMiddleware";
+} from '../controllers/groupController';
+import { protect } from '../middleware/authMiddleware';
+import validate from '../middleware/validateMiddleware';
 import {
   addRemoveGroupMemberSchema,
   createGroupSchema,
-} from "../validations/groupValidation";
+} from '../validations/groupValidation';
 
 const router = express.Router();
 
 router.use(protect);
 
-router.post("/", validate(createGroupSchema), createGroupController);
+router.post('/', validate(createGroupSchema), createGroupController);
 router.post(
-  "/add-member",
+  '/add-member',
   validate(addRemoveGroupMemberSchema),
-  addGroupMemberController
+  addGroupMemberController,
 );
 router.post(
-  "/remove-member",
+  '/remove-member',
   validate(addRemoveGroupMemberSchema),
-  removeGroupMemberController
+  removeGroupMemberController,
 );
 
 export { router as groupRoutes };

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 interface IGroup extends Document {
   name: string;
@@ -15,21 +15,21 @@ const groupSchema = new mongoose.Schema<IGroup>({
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   ],
   admins: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   ],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
 });
 
-const Group = mongoose.model<IGroup>("Group", groupSchema);
+const Group = mongoose.model<IGroup>('Group', groupSchema);
 
 export default Group;

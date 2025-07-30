@@ -1,6 +1,6 @@
-import { Response } from "express";
+import { Response } from 'express';
 
-import { ObjectId, Types } from "mongoose";
+import { ObjectId, Types } from 'mongoose';
 import {
   acceptFriendRequest,
   blockUser,
@@ -16,10 +16,10 @@ import {
   unblockUser,
   unfriendUser,
   updateUserProfile,
-} from "../services/userService";
-import catchAsync from "../utils/catchAsync";
-import { successResponse } from "../utils/responseHandler";
-import { IUserRequest } from "../utils/types";
+} from '../services/userService';
+import catchAsync from '../utils/catchAsync';
+import { successResponse } from '../utils/responseHandler';
+import { IUserRequest } from '../utils/types';
 
 /**
  * @description Change user password
@@ -39,8 +39,8 @@ const changePasswordController = catchAsync(
     const { _id } = req.user!;
 
     await changePassword(_id, oldPassword, newPassword);
-    successResponse(res, "Password changed successfully");
-  }
+    successResponse(res, 'Password changed successfully');
+  },
 );
 
 // get friend requests
@@ -57,8 +57,8 @@ const getFriendRequestController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
     const { _id } = req.user!;
     const requests = await getFriendRequests(_id);
-    successResponse(res, "Friend requests retrieved successfully", requests);
-  }
+    successResponse(res, 'Friend requests retrieved successfully', requests);
+  },
 );
 
 // get all friends
@@ -75,8 +75,8 @@ const getAllFriendsController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
     const { _id } = req.user!;
     const friends = await getAllFriends(_id);
-    successResponse(res, "Friends retrieved successfully", friends);
-  }
+    successResponse(res, 'Friends retrieved successfully', friends);
+  },
 );
 
 // get all sending friend requests
@@ -95,10 +95,10 @@ const getAllSentRequestsController = catchAsync(
     const requests = await getAllSentRequests(_id);
     successResponse(
       res,
-      "Sent friend requests retrieved successfully",
-      requests
+      'Sent friend requests retrieved successfully',
+      requests,
     );
-  }
+  },
 );
 
 /**
@@ -117,8 +117,8 @@ const sendFriendRequestController = catchAsync(
     const { _id } = req.user!;
 
     await sendFriendRequest(_id, new Types.ObjectId(userId));
-    successResponse(res, "Friend request sent");
-  }
+    successResponse(res, 'Friend request sent');
+  },
 );
 
 /**
@@ -137,8 +137,8 @@ const acceptFriendRequestController = catchAsync(
     const { _id } = req.user!;
 
     await acceptFriendRequest(_id, new Types.ObjectId(userId));
-    successResponse(res, "Friend request accepted");
-  }
+    successResponse(res, 'Friend request accepted');
+  },
 );
 
 /**
@@ -157,8 +157,8 @@ const rejectFriendRequestController = catchAsync(
     const { _id } = req.user!;
 
     await rejectFriendRequest(_id, new Types.ObjectId(userId));
-    successResponse(res, "Friend request rejected");
-  }
+    successResponse(res, 'Friend request rejected');
+  },
 );
 
 /**
@@ -177,8 +177,8 @@ const cancelFriendRequestController = catchAsync(
     const { _id } = req.user!;
 
     await cancelFriendRequest(_id, new Types.ObjectId(userId));
-    successResponse(res, "Friend request cancelled");
-  }
+    successResponse(res, 'Friend request cancelled');
+  },
 );
 
 /**
@@ -197,8 +197,8 @@ const unfriendUserController = catchAsync(
     const { _id } = req.user!;
 
     await unfriendUser(_id, new Types.ObjectId(userId));
-    successResponse(res, "User unfriended");
-  }
+    successResponse(res, 'User unfriended');
+  },
 );
 
 const blockUserController = catchAsync(
@@ -207,8 +207,8 @@ const blockUserController = catchAsync(
     const { _id } = req.user!;
 
     await blockUser(_id, userId);
-    successResponse(res, "User blocked successfully");
-  }
+    successResponse(res, 'User blocked successfully');
+  },
 );
 
 const unblockUserController = catchAsync(
@@ -217,8 +217,8 @@ const unblockUserController = catchAsync(
     const { _id } = req.user!;
 
     await unblockUser(_id, userId);
-    successResponse(res, "User unblocked successfully");
-  }
+    successResponse(res, 'User unblocked successfully');
+  },
 );
 
 /**
@@ -237,7 +237,7 @@ const unblockUserController = catchAsync(
 const updateUserProfileController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
     const avatar = req.file
-      ? req.protocol + "://" + req.host + "/public/" + req.file.filename
+      ? req.protocol + '://' + req.host + '/public/' + req.file.filename
       : undefined;
 
     const { name, bio } = req.body;
@@ -245,8 +245,8 @@ const updateUserProfileController = catchAsync(
     const { _id } = req.user!;
 
     const user = await updateUserProfile(_id, name, avatar, bio);
-    successResponse(res, "Profile updated successfully", user);
-  }
+    successResponse(res, 'Profile updated successfully', user);
+  },
 );
 
 // get profile controller
@@ -267,8 +267,8 @@ const getUserProfileController = catchAsync(
 
     // Assuming you have a function to get user profile by ID
     const user = await getUserProfileById(new Types.ObjectId(_id));
-    successResponse(res, "User profile retrieved successfully", user);
-  }
+    successResponse(res, 'User profile retrieved successfully', user);
+  },
 );
 
 /**
@@ -282,23 +282,23 @@ const getUserProfileController = catchAsync(
  */
 const findFriendsController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
-    const { search = "" } = req.query;
+    const { search = '' } = req.query;
     const { _id } = req.user!;
 
     const users = await findFriends(
       _id as unknown as ObjectId,
-      search as string
+      search as string,
     );
-    successResponse(res, "Users found", users);
-  }
+    successResponse(res, 'Users found', users);
+  },
 );
 
 const getUserByIdController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
     const { id } = req.params;
     const user = await getUserProfileById(new Types.ObjectId(id));
-    successResponse(res, "User profile retrieved successfully", user);
-  }
+    successResponse(res, 'User profile retrieved successfully', user);
+  },
 );
 
 export {

@@ -1,4 +1,4 @@
-import * as express from "express";
+import * as express from 'express';
 import {
   forgotPasswordController,
   loginUserController,
@@ -6,46 +6,46 @@ import {
   refreshTokenController,
   registerUserController,
   resetPasswordController,
-} from "../controllers/authController";
-import validate from "../middleware/validateMiddleware";
+} from '../controllers/authController';
+import validate from '../middleware/validateMiddleware';
 import {
   forgotPasswordSchema,
   loginUserSchema,
   refreshTokenSchema,
   registerUserSchema,
   resetPasswordSchema,
-} from "../validations/userValidation";
+} from '../validations/userValidation';
 
 const router = express.Router();
 
 // register
-router.post("/register", validate(registerUserSchema), registerUserController);
+router.post('/register', validate(registerUserSchema), registerUserController);
 
 // login
-router.post("/login", validate(loginUserSchema), loginUserController);
+router.post('/login', validate(loginUserSchema), loginUserController);
 
 // forgot password
 router.post(
-  "/forgot-password",
+  '/forgot-password',
   validate(forgotPasswordSchema),
-  forgotPasswordController
+  forgotPasswordController,
 );
 
 // reset password
 router.put(
-  "/reset-password/:token",
+  '/reset-password/:token',
   validate(resetPasswordSchema),
-  resetPasswordController
+  resetPasswordController,
 );
 
 // refresh token
 router.post(
-  "/refresh-token",
+  '/refresh-token',
   validate(refreshTokenSchema),
-  refreshTokenController
+  refreshTokenController,
 );
 
 // logout
-router.post("/logout", logout);
+router.post('/logout', logout);
 
 export { router as authRoutes };

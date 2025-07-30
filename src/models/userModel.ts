@@ -1,5 +1,5 @@
-import * as bcrypt from "bcryptjs";
-import mongoose, { Document, Schema } from "mongoose";
+import * as bcrypt from 'bcryptjs';
+import mongoose, { Document, Schema } from 'mongoose';
 
 interface IUser extends Document {
   _id: Schema.Types.ObjectId;
@@ -50,14 +50,14 @@ const userSchema = new mongoose.Schema<IUser>({
   friends: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   ],
   friendRequests: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
       createdAt: {
         type: Date,
@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema<IUser>({
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
       createdAt: {
         type: Date,
@@ -80,7 +80,7 @@ const userSchema = new mongoose.Schema<IUser>({
   blockedUsers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   ],
   online: {
@@ -95,8 +95,8 @@ const userSchema = new mongoose.Schema<IUser>({
   resetPasswordExpires: Date,
 });
 
-userSchema.pre<IUser>("save", async function (next) {
-  if (!this.isModified("password")) {
+userSchema.pre<IUser>('save', async function (next) {
+  if (!this.isModified('password')) {
     next();
   }
   const salt = await bcrypt.genSalt(10);
@@ -104,7 +104,7 @@ userSchema.pre<IUser>("save", async function (next) {
 });
 
 userSchema.methods.matchPassword = async function (
-  enteredPassword: string
+  enteredPassword: string,
 ): Promise<boolean> {
   console.log(this.password);
   console.log(enteredPassword);
@@ -114,6 +114,6 @@ userSchema.methods.matchPassword = async function (
   return await bcrypt.compare(enteredPassword, this.password!);
 };
 
-const User = mongoose.model<IUser>("User", userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 export default User;

@@ -1,31 +1,31 @@
-import * as express from "express";
+import * as express from 'express';
 import {
   deleteMessageController,
   editMessageController,
   getChatHistoryController,
   getChatsController,
   sendMessageController,
-} from "../controllers/messageController";
-import { protect } from "../middleware/authMiddleware";
-import validate from "../middleware/validateMiddleware";
+} from '../controllers/messageController';
+import { protect } from '../middleware/authMiddleware';
+import validate from '../middleware/validateMiddleware';
 import {
   editDeleteMessageSchema,
   sendMessageSchema,
-} from "../validations/messageValidation";
+} from '../validations/messageValidation';
 
 const router = express.Router();
 
 router.use(protect);
 
-router.get("/chats", getChatsController);
+router.get('/chats', getChatsController);
 router.get(
-  "/:userId",
+  '/:userId',
   // validate(getChatHistorySchema),
-  getChatHistoryController
+  getChatHistoryController,
 );
 
-router.post("/", validate(sendMessageSchema), sendMessageController);
-router.put("/", validate(editDeleteMessageSchema), editMessageController);
-router.delete("/", validate(editDeleteMessageSchema), deleteMessageController);
+router.post('/', validate(sendMessageSchema), sendMessageController);
+router.put('/', validate(editDeleteMessageSchema), editMessageController);
+router.delete('/', validate(editDeleteMessageSchema), deleteMessageController);
 
 export { router as messageRoutes };

@@ -1,15 +1,15 @@
-import { Response } from "express";
-import { Types } from "mongoose";
+import { Response } from 'express';
+import { Types } from 'mongoose';
 import {
   deleteMessage,
   editMessage,
   getChatHistory,
   getChats,
   sendMessage,
-} from "../services/messageService";
-import catchAsync from "../utils/catchAsync";
-import { successResponse } from "../utils/responseHandler";
-import { IUserRequest } from "../utils/types";
+} from '../services/messageService';
+import catchAsync from '../utils/catchAsync';
+import { successResponse } from '../utils/responseHandler';
+import { IUserRequest } from '../utils/types';
 
 /**
  * @description Send a message
@@ -37,7 +37,7 @@ const sendMessageController = catchAsync(
       url,
       media,
     );
-    successResponse(res, "Message sent successfully", message, 201);
+    successResponse(res, 'Message sent successfully', message, 201);
   },
 );
 
@@ -59,7 +59,7 @@ const editMessageController = catchAsync(
     const { _id } = req.user!;
 
     await editMessage(messageId, content, _id);
-    successResponse(res, "Message edited successfully");
+    successResponse(res, 'Message edited successfully');
   },
 );
 
@@ -80,7 +80,7 @@ const deleteMessageController = catchAsync(
     const { _id } = req.user!;
 
     await deleteMessage(messageId, _id);
-    successResponse(res, "Message deleted successfully");
+    successResponse(res, 'Message deleted successfully');
   },
 );
 
@@ -98,7 +98,7 @@ const getChatsController = catchAsync(
   async (req: IUserRequest, res: Response): Promise<void> => {
     const { _id } = req.user!;
     const chats = await getChats(_id);
-    successResponse(res, "Chats retrieved successfully", chats);
+    successResponse(res, 'Chats retrieved successfully', chats);
   },
 );
 
@@ -118,7 +118,7 @@ const getChatHistoryController = catchAsync(
     const { _id } = req.user!;
     const { userId } = req.params;
     const messages = await getChatHistory(_id, new Types.ObjectId(userId));
-    successResponse(res, "Chat history retrieved successfully", messages);
+    successResponse(res, 'Chat history retrieved successfully', messages);
   },
 );
 

@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "test": "vitest run --dir test",
-    "prettier": "prettier --write 'src/**/*.{ts,js,json,yml,yaml}' 'test/**/*.{ts,js}' 'dist/**/*.{json}'  openapi.yaml",
+    "prettier": "prettier --write 'src/**/*.{ts,js,json,yml,yaml}' 'test/**/*.{ts,js}' 'data/**/*.{json,js}'  openapi.yaml",
     "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,ts,jsx,tsx}' --fix"
   },

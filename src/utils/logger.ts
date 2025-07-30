@@ -1,5 +1,5 @@
-import { createLogger, format, transports } from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
+import { createLogger, format, transports } from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 const { combine, timestamp, label, printf, colorize } = format;
 
 const myFormat = printf(({ message, label, timestamp }) => {
@@ -11,56 +11,56 @@ const myFormat = printf(({ message, label, timestamp }) => {
 });
 
 const syslogColors = {
-  info: "bold magenta inverse",
-  error: "bold red inverse",
+  info: 'bold magenta inverse',
+  error: 'bold red inverse',
 };
 
 export const logger = createLogger({
-  level: "info",
+  level: 'info',
   format: combine(
     label({
-      label: "success",
+      label: 'success',
     }),
     colorize({
       all: true,
       colors: syslogColors,
     }),
     timestamp(),
-    myFormat
+    myFormat,
   ),
   transports: [
     new transports.Console(),
     new DailyRotateFile({
-      filename: "src/logs/success/success-%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH-mm",
+      filename: 'src/logs/success/success-%DATE%.log',
+      datePattern: 'YYYY-MM-DD-HH-mm',
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "14d",
+      maxSize: '20m',
+      maxFiles: '14d',
     }),
   ],
 });
 
 export const errorLogger = createLogger({
-  level: "error",
+  level: 'error',
   format: combine(
     label({
-      label: "error",
+      label: 'error',
     }),
     colorize({
       all: true,
       colors: syslogColors,
     }),
     timestamp(),
-    myFormat
+    myFormat,
   ),
   transports: [
     new transports.Console(),
     new DailyRotateFile({
-      filename: "src/logs/error/error-%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH-mm",
+      filename: 'src/logs/error/error-%DATE%.log',
+      datePattern: 'YYYY-MM-DD-HH-mm',
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "14d",
+      maxSize: '20m',
+      maxFiles: '14d',
     }),
   ],
 });

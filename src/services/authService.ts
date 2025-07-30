@@ -1,16 +1,16 @@
-import * as crypto from "crypto";
-import createError from "http-errors";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import secret from "../app/secret";
-import { sendPasswordResetMail } from "../mails/passwordResetMail";
-import User from "../models/userModel";
-import { generateTokens } from "../utils/jwt";
+import * as crypto from 'crypto';
+import createError from 'http-errors';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import secret from '../app/secret';
+import { sendPasswordResetMail } from '../mails/passwordResetMail';
+import User from '../models/userModel';
+import { generateTokens } from '../utils/jwt';
 
 const registerUser = async (name: string, email: string, passwd: string) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    throw createError(409, "User already exists");
+    throw createError(409, 'User already exists');
   }
 
   const user = await User.create({
@@ -47,7 +47,7 @@ const loginUser = async (email: string, password: string) => {
       },
     };
   } else {
-    throw createError.Unauthorized("Invalid email or password");
+    throw createError.Unauthorized('Invalid email or password');
   }
 };
 
@@ -55,15 +55,15 @@ const forgotPassword = async (email: string) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw createError.NotFound("User not found");
+    throw createError.NotFound('User not found');
   }
 
-  const resetToken = crypto.randomBytes(20).toString("hex");
+  const resetToken = crypto.randomBytes(20).toString('hex');
 
   const hashToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(resetToken)
-    .digest("hex");
+    .digest('hex');
 
   user.resetPasswordToken = hashToken;
 
@@ -81,12 +81,12 @@ const forgotPassword = async (email: string) => {
     });
     await user.save();
   } catch {
-    throw createError.InternalServerError("Error sending email");
+    throw createError.InternalServerError('Error sending email');
   }
 };
 
 const resetPassword = async (token: string, password: string) => {
-  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
@@ -94,7 +94,7 @@ const resetPassword = async (token: string, password: string) => {
   });
 
   if (!user) {
-    throw createError.NotFound("Invalid or expired password reset token");
+    throw createError.NotFound('Invalid or expired password reset token');
   }
 
   user.password = password;
@@ -113,14 +113,14 @@ const refreshToken = async (token: string) => {
     ) as JwtPayload as { id: string; email: string };
 
     if (!decoded) {
-      throw createError.Unauthorized("Invalid refresh token");
+      throw createError.Unauthorized('Invalid refresh token');
     }
 
     const { id, email } = decoded;
 
     const user = await User.findOne({ _id: id, email });
     if (!user) {
-      throw createError.Unauthorized("User not found");
+      throw createError.Unauthorized('User not found');
     }
     const { accessToken } = generateTokens({
       id: user._id.toString(),
@@ -131,7 +131,7 @@ const refreshToken = async (token: string) => {
       accessToken,
     };
   } catch {
-    throw createError.Unauthorized("Invalid refresh token");
+    throw createError.Unauthorized('Invalid refresh token');
   }
 };
 

@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 import {
   addGroupMember,
   createGroup,
   removeGroupMember,
-} from "../services/groupService";
-import catchAsync from "../utils/catchAsync";
-import { successResponse } from "../utils/responseHandler";
-import { IUserRequest } from "../utils/types";
+} from '../services/groupService';
+import catchAsync from '../utils/catchAsync';
+import { successResponse } from '../utils/responseHandler';
+import { IUserRequest } from '../utils/types';
 
 /**
  * @description Create a new group
@@ -27,8 +27,8 @@ const createGroupController = catchAsync(
     const { _id } = req.user!;
 
     const group = await createGroup(name, members, _id);
-    successResponse(res, "Group created successfully", group, 201);
-  }
+    successResponse(res, 'Group created successfully', group, 201);
+  },
 );
 
 /**
@@ -48,8 +48,8 @@ const addGroupMemberController = catchAsync(
     const { groupId, userId } = req.body;
 
     await addGroupMember(groupId, userId);
-    successResponse(res, "Member added successfully");
-  }
+    successResponse(res, 'Member added successfully');
+  },
 );
 
 /**
@@ -69,8 +69,8 @@ const removeGroupMemberController = catchAsync(
     const { groupId, userId } = req.body;
 
     await removeGroupMember(groupId, userId);
-    successResponse(res, "Member removed successfully");
-  }
+    successResponse(res, 'Member removed successfully');
+  },
 );
 
 export {

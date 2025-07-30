@@ -1,5 +1,5 @@
-import z from "zod";
-import { groupSchema } from "../schemas/groupSchemas";
+import z from 'zod';
+import { groupSchema } from '../schemas/groupSchemas';
 
 export const createGroupSchema = z.object({
   body: groupSchema.pick({
@@ -19,6 +19,6 @@ const objectIdSchema = (field: string) =>
     });
 
 export const addRemoveGroupMemberSchema = z.object({
-  groupId: objectIdSchema("groupId"),
-  userId: objectIdSchema("userId"),
+  groupId: objectIdSchema('groupId'),
+  userId: objectIdSchema('userId'),
 });

@@ -1,10 +1,10 @@
-import { config } from "dotenv";
+import { config } from 'dotenv';
 config();
 
 const port: number = +(process.env.PORT || 5050);
 const mongoURI: string = process.env.MONGO_URI!;
-const corsOrigin: string[] = process.env.CORS_ORIGIN?.split(",") || [];
-const nodeEnv: string = process.env.NODE_ENV || "development";
+const corsOrigin: string[] = process.env.CORS_ORIGIN?.split(',') || [];
+const nodeEnv: string = process.env.NODE_ENV || 'development';
 const clientUrl: string = process.env.CLIENT_URL!;
 const emailFrom: string = process.env.EMAIL_FROM!;
 const emailHost: string = process.env.EMAIL_HOST!;

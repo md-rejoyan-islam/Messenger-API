@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from "express";
-import { ZodError } from "zod";
-import { errorResponse } from "../utils/responseHandler";
+import { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
+import { errorResponse } from '../utils/responseHandler';
 
 const errorHandler = async (
   err: any,
@@ -10,11 +10,11 @@ const errorHandler = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction,
 ) => {
-  let message = err.message || "Something went wrong";
+  let message = err.message || 'Something went wrong';
   let statusCode = err.statusCode || 500;
 
   // Mongoose bad ObjectId
-  if (err.name === "CastError" && err.kind === "ObjectId") {
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
     message = `Resource not found with id of ${err.value}`;
     statusCode = 404;
   }
@@ -28,16 +28,16 @@ const errorHandler = async (
   }
 
   // Mongoose validation error
-  if (err.name === "ValidationError") {
+  if (err.name === 'ValidationError') {
     message = Object.values(err.errors)
       .map((val: any) => val.message)
-      .join(", ");
+      .join(', ');
     statusCode = 400;
   }
 
   // zod validation error
   if (err instanceof ZodError) {
-    message = err.issues[0].message || "Validation error";
+    message = err.issues[0].message || 'Validation error';
     statusCode = 422;
     // whole error response
     // err.issues
@@ -52,7 +52,7 @@ const errorHandler = async (
     message,
   };
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     errorResponseData.stack = err.stack;
   }
 

@@ -79,7 +79,9 @@ describe('Group API', () => {
     expect(res.body.message).toEqual('Member added');
 
     const updatedGroup = await Group.findById(groupId);
-    expect(updatedGroup?.members).toContainEqual(new Types.ObjectId(otherUser._id));
+    expect(updatedGroup?.members).toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
   });
 
   it('should remove a member from a group', async () => {
@@ -92,7 +94,10 @@ describe('Group API', () => {
       });
     expect(createGroupRes.statusCode).toEqual(201);
     expect(createGroupRes.body.success).toBe(true);
-    console.log('Create Group Response for remove member test:', createGroupRes.body);
+    console.log(
+      'Create Group Response for remove member test:',
+      createGroupRes.body,
+    );
     const groupId = createGroupRes.body.data._id;
 
     const res = await request(app)
@@ -107,6 +112,8 @@ describe('Group API', () => {
     expect(res.body.message).toEqual('Member removed');
 
     const updatedGroup = await Group.findById(groupId);
-    expect(updatedGroup?.members).not.toContainEqual(new Types.ObjectId(otherUser._id));
+    expect(updatedGroup?.members).not.toContainEqual(
+      new Types.ObjectId(otherUser._id),
+    );
   });
 });

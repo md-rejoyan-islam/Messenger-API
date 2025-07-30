@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import createError from "http-errors";
-import { ObjectId, Types } from "mongoose";
-import User from "../models/userModel";
+import createError from 'http-errors';
+import { ObjectId, Types } from 'mongoose';
+import User from '../models/userModel';
 
 const changePassword = async (
   userId: Types.ObjectId,
@@ -11,18 +11,18 @@ const changePassword = async (
   const user = await User.findById(userId);
 
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   if (await user.matchPassword(newPassword)) {
     throw createError(
       400,
-      "New password cannot be the same as the old password",
+      'New password cannot be the same as the old password',
     );
   }
 
   if (!(await user.matchPassword(oldPassword))) {
-    throw createError(400, "Invalid old password");
+    throw createError(400, 'Invalid old password');
   }
 
   user.password = newPassword;
@@ -32,10 +32,10 @@ const changePassword = async (
 // get all friends
 const getAllFriends = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId)
-    .populate("friends", "name avatar online lastSeen ")
-    .select("friends");
+    .populate('friends', 'name avatar online lastSeen ')
+    .select('friends');
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   return (user.friends as any[]).map((friend) => ({
@@ -50,10 +50,10 @@ const getAllFriends = async (userId: Types.ObjectId) => {
 // get all sent friend requests
 const getAllSentRequests = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId)
-    .populate("sentFriendRequests.user", "name profilePhoto")
-    .select("sentFriendRequests");
+    .populate('sentFriendRequests.user', 'name profilePhoto')
+    .select('sentFriendRequests');
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
   return (user.sentFriendRequests as any[]).map((request) => ({
     _id: request.user._id,
@@ -69,7 +69,7 @@ const sendFriendRequest = async (
 ) => {
   const user = await User.findById(senderId);
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   if (
@@ -77,12 +77,12 @@ const sendFriendRequest = async (
       .map((request) => request.user.toString())
       .includes(recipientId.toString())
   ) {
-    throw createError(409, "Friend request already sent");
+    throw createError(409, 'Friend request already sent');
   }
 
   const recipient = await User.findById(recipientId);
   if (!recipient) {
-    throw createError(404, "Recipient not found");
+    throw createError(404, 'Recipient not found');
   }
 
   await User.findByIdAndUpdate(recipientId, {
@@ -99,7 +99,7 @@ const acceptFriendRequest = async (
 ) => {
   const user = await User.findById(friendId);
   if (!user) {
-    throw createError(404, "Friend not found");
+    throw createError(404, 'Friend not found');
   }
 
   await User.findByIdAndUpdate(friendId, {
@@ -116,9 +116,9 @@ const rejectFriendRequest = async (
   currentUserId: Types.ObjectId,
   friendId: Types.ObjectId,
 ) => {
-  const user = await User.findById(friendId).select("sentFriendRequests");
+  const user = await User.findById(friendId).select('sentFriendRequests');
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   if (
@@ -126,7 +126,7 @@ const rejectFriendRequest = async (
       (request) => request.user.toString() === currentUserId.toString(),
     )
   ) {
-    throw createError(404, "Friend request not found");
+    throw createError(404, 'Friend request not found');
   }
 
   await User.findByIdAndUpdate(friendId, {
@@ -141,9 +141,9 @@ const cancelFriendRequest = async (
   currentUserId: Types.ObjectId,
   friendId: Types.ObjectId,
 ) => {
-  const user = await User.findById(friendId).select("friendRequests");
+  const user = await User.findById(friendId).select('friendRequests');
   if (!user) {
-    throw createError(404, "Friend not found");
+    throw createError(404, 'Friend not found');
   }
 
   if (
@@ -151,7 +151,7 @@ const cancelFriendRequest = async (
       (request) => request.user.toString() === currentUserId.toString(),
     )
   ) {
-    throw createError(404, "Friend request not found");
+    throw createError(404, 'Friend request not found');
   }
 
   await User.findByIdAndUpdate(friendId, {
@@ -166,9 +166,9 @@ const unfriendUser = async (
   currentUserId: Types.ObjectId,
   friendId: Types.ObjectId,
 ) => {
-  const user = await User.findById(friendId).select("friends");
+  const user = await User.findById(friendId).select('friends');
   if (!user) {
-    throw createError(404, "Friend not found");
+    throw createError(404, 'Friend not found');
   }
 
   if (
@@ -176,7 +176,7 @@ const unfriendUser = async (
       (friendId) => friendId.toString() === currentUserId.toString(),
     )
   ) {
-    throw createError(404, "User is not a friend");
+    throw createError(404, 'User is not a friend');
   }
 
   await User.findByIdAndUpdate(friendId, { $pull: { friends: currentUserId } });
@@ -189,7 +189,7 @@ const blockUser = async (
 ) => {
   const user = await User.findById(userIdToBlock);
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
   await User.findByIdAndUpdate(currentUserId, {
     $push: { blockedUsers: userIdToBlock },
@@ -202,7 +202,7 @@ const unblockUser = async (
 ) => {
   const user = await User.findById(userIdToUnblock);
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
   await User.findByIdAndUpdate(currentUserId, {
     $pull: { blockedUsers: userIdToUnblock },
@@ -217,7 +217,7 @@ const updateUserProfile = async (
   const user = await User.findById(userId);
 
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   user.name = name || user.name;
@@ -238,10 +238,10 @@ const updateUserProfile = async (
 // get user profile
 const getUserProfileById = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId).select(
-    "-password -blockedUsers  -sentFriendRequests -online -__v",
+    '-password -blockedUsers  -sentFriendRequests -online -__v',
   );
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   return {
@@ -249,6 +249,7 @@ const getUserProfileById = async (userId: Types.ObjectId) => {
     name: user.name,
     avatar: user.avatar,
     bio: user.bio,
+
     email: user.email,
     friends: user.friends.length,
   };
@@ -256,11 +257,11 @@ const getUserProfileById = async (userId: Types.ObjectId) => {
 
 const findFriends = async (userId: ObjectId, query?: string) => {
   const user = await User.findById(userId).select(
-    "friends sentFriendRequests friendRequests",
+    'friends sentFriendRequests friendRequests',
   );
 
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
 
   const filterOptions: any = {
@@ -273,7 +274,7 @@ const findFriends = async (userId: ObjectId, query?: string) => {
     },
   };
   if (query) {
-    const regex = new RegExp(query, "i");
+    const regex = new RegExp(query, 'i');
     filterOptions.$or = [
       { name: { $regex: regex } },
       // { email: { $regex: regex } }, // Uncomment if you want to search by email
@@ -281,7 +282,7 @@ const findFriends = async (userId: ObjectId, query?: string) => {
   }
 
   const users = await User.find(filterOptions).select(
-    "-password -friends -friendRequests -blockedUsers -email -sentFriendRequests -online -__v",
+    '-password -friends -friendRequests -blockedUsers -email -sentFriendRequests -online -__v',
   );
 
   return users;
@@ -289,10 +290,10 @@ const findFriends = async (userId: ObjectId, query?: string) => {
 
 const getFriendRequests = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId)
-    .populate("friendRequests.user", "name avatar")
-    .select("friendRequests");
+    .populate('friendRequests.user', 'name avatar')
+    .select('friendRequests');
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, 'User not found');
   }
   return (user.friendRequests as any[]).map((request) => ({
     _id: request.user._id,

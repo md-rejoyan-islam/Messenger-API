@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import secret from "../app/secret";
-import { errorLogger, logger } from "../utils/logger";
+import mongoose from 'mongoose';
+import secret from '../app/secret';
+import { errorLogger, logger } from '../utils/logger';
 
 const connectDB = async (): Promise<void> => {
   try {
@@ -11,7 +11,7 @@ const connectDB = async (): Promise<void> => {
     if (error instanceof Error) {
       console.error(`Error connecting to MongoDB: ${error.message}`);
     } else {
-      console.error("An unknown error occurred while connecting to MongoDB.");
+      console.error('An unknown error occurred while connecting to MongoDB.');
     }
     process.exit(1);
   }

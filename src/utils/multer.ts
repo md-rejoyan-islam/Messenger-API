@@ -1,11 +1,11 @@
-import { Request } from "express";
-import multer, { FileFilterCallback } from "multer";
-import path from "path";
+import { Request } from 'express';
+import multer, { FileFilterCallback } from 'multer';
+import path from 'path';
 
 // Allowed file types
-const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp"];
+const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 // Directory to save uploaded files
-const uploadDir = path.join(__dirname, "../../public");
+const uploadDir = path.join(__dirname, '../../public');
 
 // Storage configuration
 const storage = multer.diskStorage({
@@ -13,9 +13,9 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
   },
 });
 
@@ -23,12 +23,12 @@ const storage = multer.diskStorage({
 const fileFilter = (
   _req: Request,
   file: Express.Multer.File,
-  cb: FileFilterCallback
+  cb: FileFilterCallback,
 ) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only jpeg, png, and webp images are allowed"));
+    cb(new Error('Only jpeg, png, and webp images are allowed'));
   }
 };
 
@@ -39,4 +39,4 @@ export const uploadSingleImage = multer({
   limits: {
     fileSize: 2 * 1024 * 1024, // 2MB limit
   },
-}).single("image"); // name of the field in the form
+}).single('image'); // name of the field in the form
